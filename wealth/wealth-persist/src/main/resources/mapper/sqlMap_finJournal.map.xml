@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.solt.wealth.model.Journal">
+	<resultMap type="Journal" id="journalMap">
+		<id property="journalId" column="journal_Id" />
+		<result property="topCategory" column="top_Category"/>
+		<result property="mainCategory" column="main_Category"/>
+		<result property="subCategory" column="sub_Category"/>
+		<result property="journalDate" column="journal_date" javaType="java.sql.Date"/>
+		<result property="quantity" column="quantity" javaType="Double" jdbcType="DECIMAL"/>
+		<result property="unitPrice" column="unit_Price" javaType="Double" jdbcType="DECIMAL"/>
+		<result property="discountPrice" column="discount_Price" javaType="Double" jdbcType="DECIMAL"/>
+		<result property="uom" column="uom"/>
+		<result property="address" column="address"/>
+		<result property="specification" column="specification"/>
+		<result property="item" column="journal_item" />
+		<result property="description" column="description"/>
+		<result property="accBookId" column="acc_Book_Id" javaType="Integer"/>
+		<result property="amount" column="amount" javaType="Double" jdbcType="DECIMAL"/>
+	</resultMap>
+	
+	<select id="getJournal" parameterType="Journal" resultMap="journalMap">
+		select * from fin_journal where journal_Id = #{journalId}
+	</select>
+	
+	<select id="findJournal" parameterType="Journal" resultMap="journalMap">
+		select * from fin_journal 
+			where 1=1
+			<if test="accBookId != null">
+			AND acc_Book_Id = #{accBookId}
+			</if>
+			<if test="item != null">
+			AND journal_item = '%${item}%'
+			</if>
+		 order by journal_date desc
+	</select>
+	
+	<insert id="insertJournal" parameterType="Journal">
+		insert fin_journal(acc_Book_Id,journal_item,journal_date,quantity,unit_Price,amount
+			<if test="description != null and description != ''">,description</if>
+			<if test="specification != null and specification != ''">,specification</if> 
+			<if test="uom != null and uom != ''">,uom</if>
+			<if test="address != null and address != ''">,address</if>
+			<if test="discountPrice != null">,discount_Price</if>
+			<if test="brand != null">,brand</if>
+			<if test="barcode != null">,barcode</if>
+			<if test="topCategory != null and topCategory != ''">,top_Category</if>
+			<if test="mainCategory != null and mainCategory != ''">,main_Category</if>
+			<if test="subCategory != null and subCategory != ''">,sub_Category</if>
+		)values(#{accBookId},#{item},#{journalDate},#{quantity},#{unitPrice},#{amount}
+			<if test="description != null and description != ''">,#{description}</if>
+			<if test="specification != null and specification != ''">,#{specification}</if>
+			<if test="uom != null and uom != ''">,#{uom}</if>
+			<if test="address != null and address != ''">,#{address}</if>
+			<if test="discountPrice != null">,#{discountPrice}</if>
+			<if test="brand != null">,#{brand}</if>
+			<if test="barcode != null">,#{barcode}</if>
+			<if test="topCategory != null and topCategory != ''">,#{topCategory}</if>
+			<if test="mainCategory != null and mainCategory != ''">,#{mainCategory}</if>
+			<if test="subCategory != null and subCategory != ''">,#{subCategory}</if>
+		)
+	</insert>
+	
+	<update id="updateJournal" parameterType="Journal">
+		update fin_journal set 
+		journal_item = #{item},journal_date = #{journalDate},quantity = #{quantity},unit_Price = #{unitPrice},amount = #{amount} 
+		<if test="description != null and description != ''">,description = #{description}</if>
+		<if test="specification != null and specification != ''">,specification = #{specification}</if> 
+		<if test="uom != null and uom != ''">,uom = #{uom}</if>
+		<if test="address != null and address != ''">,address = #{address}</if>
+		<if test="discountPrice != null">,discount_Price=#{discountPrice}</if>
+		<if test="brand != null">,brand=#{brand}</if>
+			<if test="barcode != null">,barcode=#{barcode}</if>
+		<if test="topCategory != null and topCategory != ''">,top_Category = #{topCategory}</if>
+		<if test="mainCategory != null and mainCategory != ''">,main_Category = #{mainCategory}</if>
+		<if test="subCategory != null and subCategory != ''">,sub_Category = #{subCategory}</if>
+		where journal_Id = #{journalId}
+	</update>
+	
+	<delete id="deleteJournal" parameterType="Journal">
+		delete from fin_journal where journal_Id = #{journalId}
+	</delete>
+	
+	<!-- others -->
+	<select id="findJournalByParam" parameterType="Map" resultMap="journalMap">
+		select * from fin_journal 
+			where 1=1
+			<if test="accBookId != null">
+			AND acc_Book_Id = #{accBookId}
+			</if>
+			<if test="month != null">
+			AND date_format(journal_date,'%Y-%m') = #{month}
+			</if>
+		 order by journal_date desc
+	</select>
+	
+	<select id="getTotalJournal" parameterType="Map" resultType="Double">
+		select sum(amount) as total from fin_journal 
+			where 1=1
+			<if test="accBookId != null">
+			AND acc_Book_Id = #{accBookId}
+			</if>
+			<if test="month != null">
+			AND date_format(journal_date,'%Y-%m') = #{month}
+			</if>
+	</select>
+	
+	<select id="getTotalJournalMothly" parameterType="Map" resultType="Map">
+		select acc_book_id,date_format(journal_date,'%Y-%m') as label,
+			sum(amount) as value,
+			sum(amount) as displayValue
+		  from fin_journal 
+	     where 1=1
+			<if test="accBookId != null">
+			AND acc_Book_Id = #{accBookId}
+			</if>
+			<if test="year != null">
+			AND date_format(journal_date,'%Y') = #{year}
+			</if>
+			<if test="year == null">
+			AND date_format(journal_date,'%Y') = date_format(now(),'%Y')
+			</if>
+		group by acc_book_id,date_format(journal_date,'%Y-%m')
+	</select>
+	
+	<select id="getTotalJournalYearly" parameterType="Map" resultType="Map">
+		select acc_book_id,date_format(journal_date,'%Y') as label,
+			sum(amount) as value,
+			sum(amount) as displayValue 
+		  from fin_journal 
+	     where 1=1
+			<if test="accBookId != null">
+			AND acc_Book_Id = #{accBookId}
+			</if>
+		group by acc_book_id,date_format(journal_date,'%Y')
+	</select>
+	
+	<select id="getTotalMainCategoryByMoth" parameterType="Map" resultType="Map">
+		select j.acc_book_id,j.main_category,e.ENUM_NAME as label,
+    		sum(amount) as value
+			from fin_journal j left join enumerates e on j.main_category = e.ENUM_ID
+	     where 1=1
+			<if test="accBookId != null">
+			AND j.acc_Book_Id = #{accBookId}
+			</if>
+			<if test="month != null">
+			AND date_format(journal_date,'%Y-%m') = #{month}
+			</if>
+			<if test="month == null">
+			AND date_format(journal_date,'%Y-%m') = date_format(now(),'%Y-%m')
+			</if>
+		group by j.acc_book_id,j.main_category,e.ENUM_NAME
+	</select>
+	
+	<select id="getJournalMinMonthForYear" parameterType="Map" resultType="String">
+		select min(date_format(j.journal_date,'%Y-%m')) as month from fin_journal j 
+		     where 1=1
+				<if test="accBookId != null">
+				AND j.acc_Book_Id = #{accBookId}
+				</if>
+				<if test="year != null">
+				AND date_format(j.journal_date,'%Y') = #{year}
+				</if>
+				<if test="year == null">
+				AND date_format(j.journal_date,'%Y') = date_format(now(),'%Y')
+				</if>
+			limit 1
+	</select>
+	
+	<select id="getJournalPriceHis" parameterType="Map" resultType="Map">
+		select j.acc_book_id,j.journal_item,coalesce(j.discount_price ,j.unit_price ) as value,
+    			date_format(journal_date,'%Y-%m-%d') as label
+			from fin_journal j
+			where 1=1
+				<if test="accBookId != null">
+				AND j.acc_Book_Id = #{accBookId}
+				</if>
+				AND j.journal_item = #{item}
+			order by j.acc_book_id,j.journal_item,j.journal_Date
+	</select>
+</mapper>

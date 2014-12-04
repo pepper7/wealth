@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.solt.wealth.model.common.Enums">
+	<resultMap type="Enums" id="enumsMap">
+		<id property="enumId" column="enum_Id" />
+		<result property="enumType" column="enum_Type"/>
+		<result property="enumName" column="enum_Name"/>
+		<result property="description" column="description"/>
+		<result property="parentEnumId" column="parent_Enum_Id"/>
+	</resultMap>
+	
+	<select id="getEnums" parameterType="Enums" resultMap="enumsMap">
+		select * from enumerates where enum_Id = #{enumId}
+	</select>
+	
+	<select id="findEnumsByParam" parameterType="Enums" resultMap="enumsMap">
+		select * from enumerates 
+			where 1=1
+			<if test="enumType != null">
+			AND enum_Type = #{enumType}
+			</if>
+			<if test="parentEnumId == null">
+			AND parent_Enum_Id is null
+			</if>
+			<if test="parentEnumId != null">
+			AND parent_Enum_Id = #{parentEnumId}
+			</if>
+		 order by enum_Id
+	</select>
+	
+	<insert id="insertEnums" parameterType="Enums">
+		insert enumerates(enum_Id,enum_Type,enum_Name
+			<if test="description != null">,description</if>
+			<if test="parentEnumId != null">,parent_Enum_Id</if>
+		)values(#{enumId},#{enumType},#{enumName}
+			<if test="description != null">,#{description}</if>
+			<if test="parentEnumId != null">,#{parentEnumId}</if>
+		)
+	</insert>
+	
+	<update id="updateEnums" parameterType="Enums">
+		update enumerates set
+		<if test="enumName != null">
+			enum_Name = #{enumName} 
+		</if>
+		<if test="description != null">
+			description = #{description} 
+		</if>
+		where enum_Id = #{enumId}
+	</update>
+	
+	<delete id="deleteEnums" parameterType="Enums">
+		delete from enumerates where enum_Id = #{enumId}
+	</delete>
+</mapper>

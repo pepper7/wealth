@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.solt.wealth.model.AccountingBook">
+	<resultMap type="AccountingBook" id="accountingBookMap">
+		<id property="accBookId" column="acc_Book_Id" />
+		<result property="accBookName" column="acc_Booking_Name" />
+		<result property="description" column="description"/>
+	</resultMap>
+	
+	<select id="getAccountingBook" parameterType="AccountingBook" resultMap="accountingBookMap">
+		select * from fin_accounting_book where acc_book_id = #{accBookId}
+	</select>
+	
+	<select id="findAccountingBookByParam" parameterType="AccountingBook" resultMap="accountingBookMap">
+		select * from fin_accounting_book 
+		<if test="AccountingBook != null">
+			where 1=1
+			<if test="accBookName != null">
+			AND acc_Booking_Name = '%${accBookName}%'
+			</if>
+		</if>
+		order by acc_book_id
+	</select>
+	
+	<insert id="insertAccountingBook" parameterType="AccountingBook">
+		insert fin_accounting_book(acc_Booking_Name<if test="description != null">,description</if>) 
+		values(#{accBookName}<if test="description != null">,#{description}</if>)
+	</insert>
+	
+	<update id="updateAccountingBook" parameterType="AccountingBook">
+		update fin_accounting_book set acc_Booking_Name = #{accBookName},description = #{description} where acc_book_id = #{accBookId}
+	</update>
+	
+	<delete id="deleteAccountingBook" parameterType="AccountingBook">
+		delete from fin_accounting_book where acc_book_id = #{accBookId}
+	</delete>
+</mapper>

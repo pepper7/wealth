@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+	<typeAliases>
+		<typeAlias type="org.solt.wealth.model.common.Enums" alias="Enums"/>
+		<typeAlias type="org.solt.wealth.model.AccountingBook" alias="AccountingBook"/>
+		<typeAlias type="org.solt.wealth.model.Journal" alias="Journal"/>
+	</typeAliases>
+	<mappers>
+		<mapper resource="mapper/sqlMap_Enum.map.xml" />
+		<mapper resource="mapper/sqlMap_finAccountingBook.map.xml"/>
+		<mapper resource="mapper/sqlMap_finJournal.map.xml"/>
+	</mappers>
+</configuration>
