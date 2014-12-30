@@ -91,6 +91,9 @@
 			<if test="month != null">
 			AND date_format(journal_date,'%Y-%m') = #{month}
 			</if>
+			<if test="mainCategory != null">
+			AND main_Category = #{mainCategory}
+			</if>
 		 order by journal_date desc
 	</select>
 	

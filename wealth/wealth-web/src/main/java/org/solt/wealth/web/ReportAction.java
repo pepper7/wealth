@@ -9,6 +9,7 @@ import java.util.Map;
 import javax.servlet.http.HttpSession;
 
 import org.solt.wealth.model.AccountingBook;
+import org.solt.wealth.model.Journal;
 import org.solt.wealth.service.IAccountingBookReportService;
 import org.solt.wealth.service.IAccountingBookService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -116,7 +117,11 @@ public class ReportAction {
 			params.put("month", month);
 			
 			List<Map<String,Object>> datas = new ArrayList<Map<String,Object>>();
-			datas = reportService.findTotalMothlyByCategory(params);
+			for(Map<String,Object> map: reportService.findTotalMothlyByCategory(params)){
+				map.put("link", "javascript:refreshMainCategoryDetailRpt('"+month+"','"+map.get("main_category").toString()+"');");
+				datas.add(map);
+			}
+			
 			result.put("data", datas);
 			
 			Map<String,Object> chart = new HashMap<String,Object>();
@@ -176,6 +181,30 @@ public class ReportAction {
 			chart.put("yaxisname", "Amount");
 			chart.put("linecolor", "FF5904");
 			result.put("chart", chart);
+		}
+		result.put("success", true);
+		return result;
+	}
+	
+	@RequestMapping(value = "/getmothlycatedetails.htm")
+//	@RecordLog(description="获得按月主分类记录明细")
+	@ResponseBody
+	public Map<String,Object> getMonthlyCategoryDetails(HttpSession httpSession, 
+			@RequestParam(value="month",required = false) String month,
+			@RequestParam(value="category",required = false) String category){
+		Map<String, Object> result = new HashMap<String, Object>();
+		AccountingBook accBook = (AccountingBook) httpSession.getAttribute("currentAccBook");
+		if(null != accBook){
+			Map<String,Object> params = new HashMap<String,Object>();
+			params.put("accBookId", accBook.getAccBookId());
+			if(category == null || "".equals(category.trim())){
+				category = "#$*";
+			}
+			params.put("month", month);
+			params.put("mainCategory", category);
+			List<Journal> datas = new ArrayList<Journal>();
+			datas = service.findJournal(params);
+			result.put("details", datas);
 		}
 		result.put("success", true);
 		return result;
