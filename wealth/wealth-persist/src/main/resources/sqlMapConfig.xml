@@ -10,5 +10,6 @@
 		<mapper resource="mapper/sqlMap_Enum.map.xml" />
 		<mapper resource="mapper/sqlMap_finAccountingBook.map.xml"/>
 		<mapper resource="mapper/sqlMap_finJournal.map.xml"/>
+		<mapper resource="mapper/sqlMap_ReportAcc.map.xml"/>
 	</mappers>
 </configuration>

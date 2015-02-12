@@ -46,13 +46,22 @@
 			<input type="hidden" name="accBookId" value="${sessionScope.currentAccBook.accBookId}">
 			查询月份：<input name="searchMonth" value="<c:if test='${!empty result.month}'>${result.month}</c:if>">
 			<a href="javascript:void(0);" class="button icon search" id="btnSearch">查询</a>
+			<a class="button icon log" href="reportmonthlypdf.htm?month=<c:if test='${!empty result.month}'>${result.month}</c:if>" id="btnPrint" target="_blank">打印</a>
 		</form>
+		
 		<c:if test="${!empty result.journalList}">
 			<table>
 				<thead><tr><td>序号</td><td>日期</td><td>项目</td><td>单位</td><td>数量</td><td>单价</td><td>优惠价</td><td>金额</td><td>规格</td><td>品牌</td><td>说明</td><td>操作</td></tr></thead>
 			<c:forEach items="${result.journalList}" var="journal" varStatus="status">
 			<tr><td>${status.index + 1}</td>
-				<td>${journal.journalDate}</td>
+				<c:if test="${null == prev_jdate || prev_jdate != journal.journalDate}">
+					<c:if test="${journal.dailyCount > 1 }">
+						<td rowspan="${journal.dailyCount }">${journal.journalDate}</td>
+					</c:if>
+					<c:if test="${journal.dailyCount == 1}">
+						<td>${journal.journalDate}</td>
+					</c:if>
+				</c:if>
 				<td>${journal.item}</td>
 				<td>${journal.uom}</td>
 				<td class="td_number">${journal.quantity}</td>
@@ -67,6 +76,7 @@
 				<td><a href="editjournal.htm?journalId=${journal.journalId}" class="button icon edit"><span>编辑</span></a>
 				<a href="deletejournal.htm?journalId=${journal.journalId}" class="button icon trash"><span>删除</span></a></td>
 			</tr>
+			<c:set var="prev_jdate" value="${journal.journalDate}"/>
 			</c:forEach>
 			<c:if test="${!empty result.total}">
 				<tfoot><tr><td>合计</td><td></td><td></td><td></td><td></td><td></td><td></td>

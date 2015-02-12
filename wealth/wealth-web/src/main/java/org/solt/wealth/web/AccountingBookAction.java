@@ -10,6 +10,7 @@ import javax.servlet.http.HttpSession;
 import org.solt.wealth.model.AccountingBook;
 import org.solt.wealth.model.Journal;
 import org.solt.wealth.model.common.Enums;
+import org.solt.wealth.service.IAccountingBookReportService;
 import org.solt.wealth.service.IAccountingBookService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -24,6 +25,8 @@ public class AccountingBookAction {
 
 	@Autowired
 	IAccountingBookService service;
+	@Autowired
+	IAccountingBookReportService reportService;
 
 	// Page
 	@RequestMapping(value = "index.htm")
@@ -41,7 +44,7 @@ public class AccountingBookAction {
 			Map<String,Object> params = new HashMap<String,Object>();
 			params.put("month", month);
 			params.put("accBookId", accBook.getAccBookId());
-			result.put("journalList", service.findJournal(params));
+			result.put("journalList", reportService.findJournalView(params));
 			result.put("total", service.totalJournal(params));
 			result.put("month", month);
 		}
@@ -177,7 +180,7 @@ public class AccountingBookAction {
 		Map<String,Object> params = new HashMap<String,Object>();
 		params.put("month", month);
 		params.put("accBookId", journal.getAccBookId());
-		result.put("journalList", service.findJournal(params));
+		result.put("journalList", reportService.findJournalView(params));
 		result.put("total", service.totalJournal(params));
 		result.put("month", month);
 		//others

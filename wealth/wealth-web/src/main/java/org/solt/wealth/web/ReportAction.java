@@ -38,6 +38,28 @@ public class ReportAction {
 		return new ModelAndView("report/reports", "result", result);
 	}
 	
+	@RequestMapping("reportmonthlypdf.htm")
+	public ModelAndView reportMonthlyPdf(HttpSession httpSession,
+			@RequestParam(value = "month", required = false) String month) {
+		ModelAndView mav = new ModelAndView();
+		mav.setViewName("reportMonthlyPdf");
+		AccountingBook accBook = (AccountingBook) httpSession.getAttribute("currentAccBook");
+		if(null != accBook){
+			Map<String,Object> params = new HashMap<String,Object>();
+			params.put("accBookId", accBook.getAccBookId());
+			if(month == null || "".equals(month.trim())){
+				month = Calendar.getInstance().get(Calendar.YEAR)+"-"+(Calendar.getInstance().get(Calendar.MONTH)+1);
+			}
+			params.put("month", month);
+			params.put("orderList", "journal_date");
+			mav.addObject("month", month);
+			mav.addObject("accBook", accBook);
+			mav.addObject("journalList", service.findJournal(params));
+			mav.addObject("total", service.totalJournal(params));
+		}
+		return mav;
+	}
+	
 	// Action
 	@RequestMapping(value = "/getyearlydatas.htm")
 //	@RecordLog(description="获得按年统计数据，所有")
@@ -112,7 +134,7 @@ public class ReportAction {
 			Map<String,Object> params = new HashMap<String,Object>();
 			params.put("accBookId", accBook.getAccBookId());
 			if(month == null || "".equals(month.trim())){
-				month = Calendar.getInstance().get(Calendar.YEAR)+"-"+(Calendar.getInstance().get(Calendar.MONTH)+1);
+				month = Calendar.getInstance().get(Calendar.YEAR)+"-"+(Calendar.getInstance().get(Calendar.MONTH)>8?"":"0")+(Calendar.getInstance().get(Calendar.MONTH)+1);
 			}
 			params.put("month", month);
 			

@@ -3,6 +3,7 @@ package org.solt.wealth.service;
 import java.util.List;
 import java.util.Map;
 
+import org.solt.wealth.model.view.JournalView;
 import org.solt.wealth.persist.IAccountingBookReportDAO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -36,6 +37,10 @@ public class AccountingBookReportService implements
 	public List<Map<String, Object>> findPriceHisByItem(
 			Map<String, Object> params) {
 		return dao.getPriceHisByItem(params);
+	}
+
+	public List<JournalView> findJournalView(Map<String, Object> params) {
+		return dao.findJournalViewByParam(params);
 	}
 
 }

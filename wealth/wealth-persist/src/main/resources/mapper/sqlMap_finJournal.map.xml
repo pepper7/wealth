@@ -94,7 +94,12 @@
 			<if test="mainCategory != null">
 			AND main_Category = #{mainCategory}
 			</if>
-		 order by journal_date desc
+			<if test="orderList != null">
+			order by ${orderList},journal_id
+			</if>
+			<if test="orderList == null">
+			order by journal_date desc, journal_id
+			</if>
 	</select>
 	
 	<select id="getTotalJournal" parameterType="Map" resultType="Double">
