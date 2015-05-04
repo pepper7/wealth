@@ -60,7 +60,6 @@
 	</dependencies>
 
 	<modules>
-		<module>wealth-model</module>
 		<module>wealth-persist</module>
 		<module>wealth-service</module>
 		<module>wealth-web</module>
@@ -90,7 +89,108 @@
 						<failOnMissingWebXml>false</failOnMissingWebXml>
 					</configuration>
 				</plugin>
+				
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-site-plugin</artifactId>
+					<version>3.1</version>
+					<configuration>
+						<locales>zh_CN</locales>
+						<!-- 配置报告信息 -->
+						<reportPlugins>
+							<!-- 项目基本信息报告 -->
+							<plugin>
+								<groupId>org.apache.maven.plugins</groupId>
+								<artifactId>maven-project-info-reports-plugin</artifactId>
+								<version>2.2</version>
+								<configuration>
+									<dependencyDetailsEnabled>true</dependencyDetailsEnabled>
+									<dependencyLocationsEnabled>false</dependencyLocationsEnabled>
+								</configuration>
+							</plugin>
+							<!-- 生成站点文件具体信息报告 -->
+							<plugin>
+								<groupId>org.apache.maven.plugins</groupId>
+								<artifactId>maven-linkcheck-plugin</artifactId>
+								<version>1.1</version>
+							</plugin>
+							<!-- 检查代码规范报告 -->
+							<!-- <plugin>
+								<groupId>org.apache.maven.plugins</groupId>
+								<artifactId>maven-checkstyle-plugin</artifactId>
+								<version>2.2</version>
+								<configuration>
+									<configLocation>src/main/resources/checkstyle/checks.xml</configLocation>
+								</configuration>
+							</plugin> -->
+							<!-- 项目API doc报告 -->
+							<plugin>
+								<groupId>org.apache.maven.plugins</groupId>
+								<artifactId>maven-javadoc-plugin</artifactId>
+								<version>2.7</version>
+							</plugin>
+							<!-- 项目源代码报告 -->
+							<plugin>
+								<groupId>org.apache.maven.plugins</groupId>
+								<artifactId>maven-jxr-plugin</artifactId>
+								<version>2.3</version>
+							</plugin>
+
+							<!-- 项目还需要做的TODO报告 -->
+							<plugin>
+								<groupId>org.codehaus.mojo</groupId>
+								<artifactId>taglist-maven-plugin</artifactId>
+							</plugin>
+							<!-- 项目源代码分析报告 -->
+							<plugin>
+								<groupId>org.apache.maven.plugins</groupId>
+								<artifactId>maven-pmd-plugin</artifactId>
+								<version>2.5</version>
+								<configuration>
+									<linkXref>true</linkXref>
+									<sourceEncoding>UTF-8</sourceEncoding>
+									<minimumTokens>100</minimumTokens>
+									<targetJdk>1.6</targetJdk>
+								</configuration>
+							</plugin>
+							<!-- 测试报告 -->
+							<plugin>
+								<groupId>org.apache.maven.plugins</groupId>
+								<artifactId>maven-surefire-report-plugin</artifactId>
+								<version>2.12</version>
+							</plugin>
+							<!-- 单元测试覆盖率报告 -->
+							<plugin>
+								<groupId>org.codehaus.mojo</groupId>
+								<artifactId>cobertura-maven-plugin</artifactId>
+								<version>2.5.1</version>
+								<configuration>
+									<aggregate>true</aggregate>
+								</configuration>
+							</plugin>
+						</reportPlugins>
+					</configuration>
+				</plugin>
 			</plugins>
 		</pluginManagement>
 	</build>
+	
+	<mailingLists>
+		<mailingList>
+			<name>yasin</name>
+			<post>yasin.y.ren@gmail.com</post>
+		</mailingList>
+	</mailingLists>
+	
+	<developers>
+		<developer>
+			<name>yasin</name>
+			<email>yasin.y.ren@gmail.com</email>
+			<url />
+			<roles>
+				<role>Project Manager</role>
+				<role>Project Developer</role>
+			</roles>
+		</developer>
+	</developers>
 </project>
