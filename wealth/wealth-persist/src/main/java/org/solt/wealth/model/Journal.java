@@ -1,11 +1,10 @@
 package org.solt.wealth.model;
 
-import java.io.Serializable;
 import java.sql.Date;
 
 import org.solt.wealth.model.common.CommonEntity;
 
-public class Journal extends CommonEntity implements Serializable {
+public class Journal extends CommonEntity {
 
 	/**
 	 * 

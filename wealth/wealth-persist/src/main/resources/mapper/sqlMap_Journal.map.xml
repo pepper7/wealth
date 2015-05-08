@@ -70,7 +70,7 @@
 		<if test="address != null and address != ''">,address = #{address}</if>
 		<if test="discountPrice != null">,discount_Price=#{discountPrice}</if>
 		<if test="brand != null">,brand=#{brand}</if>
-			<if test="barcode != null">,barcode=#{barcode}</if>
+		<if test="barcode != null">,barcode=#{barcode}</if>
 		<if test="topCategory != null and topCategory != ''">,top_Category = #{topCategory}</if>
 		<if test="mainCategory != null and mainCategory != ''">,main_Category = #{mainCategory}</if>
 		<if test="subCategory != null and subCategory != ''">,sub_Category = #{subCategory}</if>

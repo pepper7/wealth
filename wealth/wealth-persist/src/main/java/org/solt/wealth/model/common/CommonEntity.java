@@ -1,14 +1,19 @@
 package org.solt.wealth.model.common;
 
 
+import java.io.Serializable;
 import java.sql.Timestamp;
 /**
  * 抽象通用实体类
  * @author yasin
  *
  */
-public abstract class CommonEntity {
+public abstract class CommonEntity implements Serializable{
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -8022254739380873216L;
 	private Timestamp creationDate;
 	private Long createdBy;
 	private Timestamp lastUpdatedDate;

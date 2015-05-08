@@ -5,10 +5,8 @@ import java.util.Map;
 
 import org.solt.wealth.model.AccountingBook;
 import org.solt.wealth.model.Journal;
-import org.solt.wealth.model.common.Enums;
 import org.solt.wealth.persist.IAccountingBookDAO;
 import org.solt.wealth.persist.IJournalDAO;
-import org.solt.wealth.persist.common.IEnumDAO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,8 +17,6 @@ public class AccountingBookService implements IAccountingBookService {
 	private IAccountingBookDAO dao;
 	@Autowired
 	private IJournalDAO journalDao;
-	@Autowired
-	private IEnumDAO enumDao;
 
 	public AccountingBook getAccount(AccountingBook accountingBook) {
 		return dao.getAccountingBookById(accountingBook);
@@ -42,6 +38,21 @@ public class AccountingBookService implements IAccountingBookService {
 		boolean flag = false;
 		if (dao.updateAccountingBook(accountingBook) > 0) {
 			flag = true;
+		}
+		return flag;
+	}
+	
+	public boolean deleteAccount(AccountingBook accountingBook) throws ServiceException {
+		boolean flag = false;
+		Journal journal = new Journal();
+		journal.setAccBookId(accountingBook.getAccBookId());
+		List<Journal> list = journalDao.findJournal(journal);
+		if(list.size()==0){
+			if (dao.deleteAccountingBook(accountingBook) > 0) {
+				flag = true;
+			}
+		}else{
+			throw new ServiceException("该账簿中还有日记账记录，不可删除！");
 		}
 		return flag;
 	}
@@ -82,18 +93,10 @@ public class AccountingBookService implements IAccountingBookService {
 		return flag;
 	}
 
-	public List<Enums> getCategory() {
-		Enums enums = new Enums();
-		return getCategory(enums);
-	}
-
-	public List<Enums> getCategory(Enums enums) {
-		enums.setEnumType("CONSUMPTION_TYPE");
-		return enumDao.findEnumsByParam(enums);
-	}
-
 	public Double totalJournal(Map<String, Object> params) {
 		return journalDao.getTotalJournal(params);
 	}
+
+	
 
 }

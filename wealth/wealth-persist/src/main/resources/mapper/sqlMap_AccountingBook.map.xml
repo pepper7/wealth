@@ -12,23 +12,22 @@
 	</select>
 	
 	<select id="findAccountingBookByParam" parameterType="AccountingBook" resultMap="accountingBookMap">
-		select * from fin_accounting_book 
-		<if test="AccountingBook != null">
-			where 1=1
-			<if test="accBookName != null">
-			AND acc_Booking_Name = '%${accBookName}%'
+		select * from fin_accounting_book where 1=1
+			<if test="accBookName != null and accBookName != ''">
+			AND acc_Booking_Name like '%${accBookName}%'
 			</if>
-		</if>
 		order by acc_book_id
 	</select>
 	
 	<insert id="insertAccountingBook" parameterType="AccountingBook">
-		insert fin_accounting_book(acc_Booking_Name<if test="description != null">,description</if>) 
-		values(#{accBookName}<if test="description != null">,#{description}</if>)
+		insert fin_accounting_book(acc_Booking_Name<if test="description != null and description !=''">,description</if>) 
+		values(#{accBookName}<if test="description != null and description !=''">,#{description}</if>)
 	</insert>
 	
 	<update id="updateAccountingBook" parameterType="AccountingBook">
-		update fin_accounting_book set acc_Booking_Name = #{accBookName},description = #{description} where acc_book_id = #{accBookId}
+		update fin_accounting_book set acc_Booking_Name = #{accBookName}
+		<if test="description != null and description !=''">, description = #{description} </if>
+		where acc_book_id = #{accBookId}
 	</update>
 	
 	<delete id="deleteAccountingBook" parameterType="AccountingBook">

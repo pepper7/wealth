@@ -1,18 +1,27 @@
 package org.solt.wealth.model.common;
 
-import java.io.Serializable;
+import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.NotEmpty;
 
-public class Enums extends CommonEntity implements Serializable {
+public class Enums extends CommonEntity {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1489618730247110166L;
 
+	@NotEmpty(message = "{category.enumId.empty.error}")
+	@Length(max = 20, message = "{category.enumId.length.error}")
 	private String enumId;
+	@NotEmpty(message = "{category.enumType.empty.error}")
+	@Length(max = 20, message = "{category.enumType.length.error}")
 	private String enumType;
+	@NotEmpty(message = "{category.enumName.empty.error}")
+	@Length(max = 50, message = "{category.enumName.length.error}")
 	private String enumName;
+	@Length(max = 200, message = "{category.description.length.error}")
 	private String description;
+	@Length(max = 20, message = "{category.parentEnumId.length.error}")
 	private String parentEnumId;
 
 	public String getEnumId() {

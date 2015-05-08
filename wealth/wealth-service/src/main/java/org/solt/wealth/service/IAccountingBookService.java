@@ -5,7 +5,6 @@ import java.util.Map;
 
 import org.solt.wealth.model.AccountingBook;
 import org.solt.wealth.model.Journal;
-import org.solt.wealth.model.common.Enums;
 
 public interface IAccountingBookService {
 
@@ -16,6 +15,8 @@ public interface IAccountingBookService {
 	public boolean addAccount(AccountingBook accountingBook);
 
 	public boolean updateAccount(AccountingBook accountingBook);
+	
+	public boolean deleteAccount(AccountingBook accountingBook) throws ServiceException;
 
 	public List<Journal> findJournal(Journal journal);
 
@@ -31,7 +32,4 @@ public interface IAccountingBookService {
 
 	public boolean deleteJournal(Journal journal);
 
-	public List<Enums> getCategory();
-
-	public List<Enums> getCategory(Enums enums);
 }

@@ -1,10 +1,8 @@
 package org.solt.wealth.model;
 
-import java.io.Serializable;
-
 import org.solt.wealth.model.common.CommonEntity;
 
-public class AccountingBook extends CommonEntity implements Serializable {
+public class AccountingBook extends CommonEntity {
 	/**
 	 * 
 	 */

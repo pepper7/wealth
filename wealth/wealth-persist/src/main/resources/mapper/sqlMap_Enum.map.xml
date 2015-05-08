@@ -16,13 +16,37 @@
 	<select id="findEnumsByParam" parameterType="Enums" resultMap="enumsMap">
 		select * from enumerates 
 			where 1=1
-			<if test="enumType != null">
+			<if test="enumId != null and enumId !=''">
+			AND enum_Id = #{enumId}
+			</if>
+			<if test="enumName != null">
+			AND enum_Name like '%${enumName}%'
+			</if>
+			<if test="enumType != null and enumType !=''">
 			AND enum_Type = #{enumType}
 			</if>
-			<if test="parentEnumId == null">
+			<if test="parentEnumId != null and parentEnumId !=''">
+			AND parent_Enum_Id = #{parentEnumId}
+			</if>
+		 order by enum_Id
+	</select>
+	
+	<select id="findEnumsByParamForLayer" parameterType="Enums" resultMap="enumsMap">
+		select * from enumerates 
+			where 1=1
+			<if test="enumId != null and enumId !=''">
+			AND enum_Id = #{enumId}
+			</if>
+			<if test="enumName != null">
+			AND enum_Name like '%${enumName}%'
+			</if>
+			<if test="enumType != null and enumType !=''">
+			AND enum_Type = #{enumType}
+			</if>
+			<if test="parentEnumId == null || parentEnumId ==''">
 			AND parent_Enum_Id is null
 			</if>
-			<if test="parentEnumId != null">
+			<if test="parentEnumId != null and parentEnumId !=''">
 			AND parent_Enum_Id = #{parentEnumId}
 			</if>
 		 order by enum_Id
@@ -30,21 +54,27 @@
 	
 	<insert id="insertEnums" parameterType="Enums">
 		insert enumerates(enum_Id,enum_Type,enum_Name
-			<if test="description != null">,description</if>
-			<if test="parentEnumId != null">,parent_Enum_Id</if>
+			<if test="description != null and description !=''">,description</if>
+			<if test="parentEnumId != null and parentEnumId !=''">,parent_Enum_Id</if>
 		)values(#{enumId},#{enumType},#{enumName}
-			<if test="description != null">,#{description}</if>
-			<if test="parentEnumId != null">,#{parentEnumId}</if>
+			<if test="description != null and description !=''">,#{description}</if>
+			<if test="parentEnumId != null and parentEnumId !=''">,#{parentEnumId}</if>
 		)
 	</insert>
 	
 	<update id="updateEnums" parameterType="Enums">
 		update enumerates set
-		<if test="enumName != null">
+		<if test="enumName != null and enumName !=''">
 			enum_Name = #{enumName} 
 		</if>
-		<if test="description != null">
-			description = #{description} 
+		<if test="parentEnumId == null || parentEnumId ==''">
+			,parent_Enum_Id = null
+		</if>
+		<if test="parentEnumId != null and parentEnumId !=''">
+			,parent_Enum_Id = #{parentEnumId} 
+		</if>
+		<if test="description != null and description !=''">
+			,description = #{description} 
 		</if>
 		where enum_Id = #{enumId}
 	</update>
