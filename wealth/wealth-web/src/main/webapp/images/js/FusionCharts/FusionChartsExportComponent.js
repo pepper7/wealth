@@ -152,8 +152,7 @@ var FC_ExportDataReady = function(streamObj)
 {
     // Call the relayer function to relay this object to its corresponding
     // export component.
-	return _FCEO.relayStream(streamObj) 
-
+	return _FCEO.relayStream(streamObj);
 };
 
 

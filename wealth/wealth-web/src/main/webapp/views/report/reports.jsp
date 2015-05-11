@@ -4,8 +4,8 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <html>
 <head>
-<title>${result.title}</title>
-<jsp:include page="../includes.jsp"/>
+<title>${title}</title>
+<jsp:include page="../header.jsp"/>
 <script type="text/javascript" src="${pageContext.request.contextPath}/images/js/FusionCharts/FusionCharts.js"></script>
 <style type="text/css">
 	#reports{overflow:hidden;}
@@ -19,8 +19,24 @@
 </style>
 </head>
 <body>
+<div class="main_content">
+<jsp:include page="../menubar.jsp"/>
+<div id="accBooks" style="text-align:left;width:1024px;<c:if test="${!empty sessionScope.currentAccBook}">display:none;</c:if>">
+	<c:if test="${!empty accBookList}">
+		<ul>
+		<c:forEach items="${accBookList}" var="book">
+			<li><input type="radio" name="accBookId" value="${book.accBookId}" <c:if test="${!empty sessionScope.currentAccBook && sessionScope.currentAccBook.accBookId == book.accBookId}">checked=\"checked\"</c:if> <c:if test="${null == book.accBookName || empty book.accBookName}">disabled=\"disabled\"</c:if>>${book.accBookName}[${book.description}] 
+				<!-- <a href="editaccount.htm?accountNo=${account.accountNo}">编辑</a><a href="delaccount.htm?accountNo=${account.accountNo}">删除</a> --></li>
+		</c:forEach>
+		</ul>
+		<form action="chooseaccbook.htm" name="chooseAccbookForm" method="POST">
+			<input type="hidden" value="" name="accBookId">
+		</form>
+	</c:if>
+	<hr>
+</div>
 <div style="text-align:left;width:1024px;">
-	当前账簿：${sessionScope.currentAccBook.accBookName}<a href="index.htm" class="button icon arrowleft"><span>返回</span></a>
+	<a href="javascript:void(0);" class="btn btn-default btn-sm" id="btnChangeBook"><span class="glyphicon glyphicon-refresh"></span> 切换账簿</a>当前账簿：${sessionScope.currentAccBook.accBookName}<a href="account/journal.htm" class="btn btn-primary btn-sm"><span class="glyphicon glyphicon-arrow-left"></span> 返回</a>
 	<div id="reports">
 		<div id="rptYearly">The Accounting Report Yearly!</div>
 		<div id="rptMonthly">The Accounting Report Monthly!</div>
@@ -28,9 +44,21 @@
 		<div id="rptCategoryDetails"></div>
 	</div>
 </div>
+</div>
+<jsp:include page="../footer.jsp"/>
 </body>
 <script>
 $(function(){
+	$(":radio[name=accBookId]").click(function(){
+		var form = $("form[name=chooseAccbookForm]");
+		$(form).find(":hidden[name=accBookId]").val($(this).val());
+		$(form).submit();
+	});
+	
+	$("#btnChangeBook").click(function(){
+		$("#accBooks").toggle();
+	});
+	
 	var yearlyReport = new FusionCharts({
 		swfUrl:"${pageContext.request.contextPath}/images/js/FusionCharts/charts/Column2D.swf", 
 		      id: "rptYearlyId", 

@@ -3,198 +3,138 @@ package org.solt.wealth.web;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpSession;
 
 import org.solt.wealth.model.AccountingBook;
-import org.solt.wealth.model.Journal;
-import org.solt.wealth.model.common.Enums;
 import org.solt.wealth.service.IAccountingBookReportService;
 import org.solt.wealth.service.IAccountingBookService;
+import org.solt.wealth.service.ServiceException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
-//@RequestMapping(value = "/account/")
+@RequestMapping(value = "/account/")
 public class AccountingBookAction {
 
+	private final static String PAGE_TITLE = "试验场【账簿】";
+	private final static String PAGE_SUB_MENU = "AccBook";
+
 	@Autowired
-	IAccountingBookService service;
+	private IAccountingBookService service;
 	@Autowired
-	IAccountingBookReportService reportService;
+	private IAccountingBookReportService reportService;
 
 	// Page
 	@RequestMapping(value = "index.htm")
-//	@RecordLog(description = "跳转至账簿试验场首页")
+	// @RecordLog(description = "跳转至账簿试验场首页")
 	public ModelAndView toIndexPage(HttpSession httpSession) {
-		Map<String, Object> result = new HashMap<String, Object>();
+		ModelAndView mav = new ModelAndView();
+		mav.addObject("title", PAGE_TITLE);
+		mav.addObject("navMenu", PAGE_SUB_MENU);
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM");
 		String month = dateFormat.format(new Date());
-		result.put("title", "试验场【账簿】");
-		result.put("accBookList", service.findAccounts(null));
+		mav.addObject("accBookList", service.findAccounts(null));
 		AccountingBook accBook = (AccountingBook) httpSession.getAttribute("currentAccBook");
-		
-		if(null != accBook){
-			//获得日记账
-			Map<String,Object> params = new HashMap<String,Object>();
+
+		if (null != accBook) {
+			// 获得日记账
+			Map<String, Object> params = new HashMap<String, Object>();
 			params.put("month", month);
 			params.put("accBookId", accBook.getAccBookId());
-			result.put("journalList", reportService.findJournalView(params));
-			result.put("total", service.totalJournal(params));
-			result.put("month", month);
+			mav.addObject("journalList", reportService.findJournalView(params));
+			mav.addObject("total", service.totalJournal(params));
+			mav.addObject("month", month);
 		}
-		return new ModelAndView("account/index", "result", result);
+		mav.setViewName("account/index");
+		return mav;
 	}
-	
+
 	@RequestMapping(value = "newaccbook.htm")
-//	@RecordLog(description="跳转至账簿创建页面")
+	// @RecordLog(description="跳转至账簿创建页面")
 	public ModelAndView toNewAccountPage() {
 		ModelAndView mav = new ModelAndView();
-		Map<String, Object> result = new HashMap<String, Object>();
-		result.put("title", "试验场【账簿】");
-		mav.addObject("result",result);
+		mav.addObject("title", PAGE_TITLE);
+		mav.addObject("navMenu", PAGE_SUB_MENU);
 		mav.setViewName("account/addAccBook");
 		return mav;
 	}
-	
-	@RequestMapping(value = "newjournal.htm")
-//	@RecordLog(description="跳转至账簿创建页面")
-	public ModelAndView toNewJournalPage() {
-		Map<String, Object> result = new HashMap<String, Object>();
-		result.put("title", "试验场【账簿】");
-		result.put("topCategoryList", service.getCategory());
-		return new ModelAndView("account/addJournal", "result", result);
-	}
-	
-	@RequestMapping(value = "editjournal.htm")
-//	@RecordLog(description="跳转至账簿创建页面")
-	public ModelAndView toEditJournalPage(Journal journal) {
+
+	@RequestMapping(value = "editaccbook.htm")
+	// @RecordLog(description="跳转至账簿创建页面")
+	public ModelAndView toEditJournalPage(AccountingBook accountingBook) {
 		ModelAndView mav = new ModelAndView();
-		mav.addObject("title", "试验场【账簿】");
-		mav.addObject("topCategoryList", service.getCategory());
-		journal = service.getJournal(journal);
-		Enums enums = new Enums();
-		if(null != journal.getTopCategory()){
-			enums.setParentEnumId(journal.getTopCategory());
-			mav.addObject("mainCategoryList", service.getCategory(enums));
-		}
-		if(null != journal.getMainCategory()){
-			enums.setParentEnumId(journal.getMainCategory());
-			mav.addObject("subCategoryList", service.getCategory(enums));
-		}
-		mav.addObject("journal", journal);
-		mav.setViewName("account/editJournal");
-		return mav;
-	}
-		
-	// Action
-	@RequestMapping(value="addaccbook.htm")
-	public ModelAndView addAccountingBook(AccountingBook accountingBook){
-		Map<String, Object> result = new HashMap<String, Object>();
-		if(service.addAccount(accountingBook)){
-			return new ModelAndView("redirect:/index.htm");
-		}else{
-			return new ModelAndView("account/addAccBook", "result", result);
-		}
-	}
-	
-	@RequestMapping(value="chooseaccbook.htm")
-	public ModelAndView chooseAccountingBook(AccountingBook accountingBook, HttpSession httpSession){
-		Map<String, Object> result = new HashMap<String, Object>();
+		mav.addObject("title", PAGE_TITLE);
+		mav.addObject("navMenu", PAGE_SUB_MENU);
 		accountingBook = service.getAccount(accountingBook);
-		httpSession.setAttribute("currentAccBook", accountingBook);
-		result.put("title", "试验场【账簿】");
-		result.put("currentAccBook", accountingBook);
-		return new ModelAndView("redirect:/index.htm","result", result);
+		mav.addObject("accountingBook", accountingBook);
+		mav.setViewName("account/editAccBook");
+		return mav;
 	}
-	
-	@RequestMapping(value="addjournal.htm")
-	public ModelAndView addJournal(Journal journal,@RequestParam("journalDatetime") String journalDatetime){
-		Map<String, Object> result = new HashMap<String, Object>();
-		
-		//SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-		
-		if(null != journalDatetime){
-//			try {
-				//java.util.Date date = dateFormat.parse(journalDatetime);
-				journal.setJournalDate(java.sql.Date.valueOf(journalDatetime));
-//			} catch (ParseException e) {
-//				e.printStackTrace();
-//				return new ModelAndView("account/addJournal", "result", result);
-//			}
-		}else{
-			return new ModelAndView("account/addJournal", "result", result);
-		}
-		
-		if(service.addJournal(journal)){
-			return new ModelAndView("redirect:/index.htm");
-		}else{
-			return new ModelAndView("account/addJournal", "result", result);
-		}
-	}
-	
-	@RequestMapping(value="savejournal.htm")
-	public ModelAndView saveJournal(Journal journal,@RequestParam("journalDatetime") String journalDatetime){
-		//SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+
+	// Action
+	@RequestMapping(value = "addaccbook.htm")
+	public ModelAndView addAccountingBook(AccountingBook accountingBook) {
 		ModelAndView mav = new ModelAndView();
-		mav.addObject("title", "试验场【账簿】");
-		mav.addObject("journal", journal);
-		
-		if(null != journalDatetime){
-//			try {
-				//java.util.Date date = dateFormat.parse(journalDatetime);
-				journal.setJournalDate(java.sql.Date.valueOf(journalDatetime));
-//			} catch (ParseException e) {
-//				e.printStackTrace();
-//				return new ModelAndView("account/addJournal", "result", result);
-//			}
-		}else{
-			mav.setViewName("account/editJournal");
-		}
-		
-		if(service.saveJournal(journal)){
-			mav.setViewName("redirect:/index.htm");
-		}else{
-			mav.setViewName("account/editJournal");
+		mav.addObject("title", PAGE_TITLE);
+		mav.addObject("navMenu", PAGE_SUB_MENU);
+		if (service.addAccount(accountingBook)) {
+			mav.setViewName("redirect:/account/index.htm");
+		} else {
+			mav.setViewName("account/addAccBook");
 		}
 		return mav;
 	}
-	
-	@RequestMapping(value="deletejournal.htm")
-	public ModelAndView deleteJournal(Journal journal){
+
+	@RequestMapping(value = "saveaccbook.htm")
+	public ModelAndView saveAccountingBook(AccountingBook accountingBook) {
 		ModelAndView mav = new ModelAndView();
-		mav.addObject("title", "试验场【账簿】");
-		mav.setViewName("redirect:/index.htm");
-		service.deleteJournal(journal);
+		mav.addObject("title", PAGE_TITLE);
+		mav.addObject("navMenu", PAGE_SUB_MENU);
+		if (service.updateAccount(accountingBook)) {
+			mav.setViewName("redirect:/account/index.htm");
+		} else {
+			mav.setViewName("account/addAccBook");
+		}
 		return mav;
 	}
-	
-	@RequestMapping(value="searchJournal.htm")
-	public ModelAndView searchJournal(Journal journal, @RequestParam("searchMonth") String month){
-		Map<String, Object> result = new HashMap<String, Object>();
-		Map<String,Object> params = new HashMap<String,Object>();
-		params.put("month", month);
-		params.put("accBookId", journal.getAccBookId());
-		result.put("journalList", reportService.findJournalView(params));
-		result.put("total", service.totalJournal(params));
-		result.put("month", month);
-		//others
-		result.put("title", "试验场【账簿】");
-		result.put("accBookList", service.findAccounts(null));
-		return new ModelAndView("account/index", "result", result); 
+
+	@RequestMapping(value = "searchaccbook.htm")
+	public ModelAndView searchAccountingBook(AccountingBook accountingBook) {
+		ModelAndView mav = new ModelAndView();
+		mav.addObject("title", PAGE_TITLE);
+		mav.addObject("navMenu", PAGE_SUB_MENU);
+		mav.addObject("param", accountingBook);
+		List<AccountingBook> list = null;
+		list = service.findAccounts(accountingBook);
+		mav.addObject("accbookList", list);
+		if (list.size() == 0) {
+			mav.addObject("success", "info");
+			mav.addObject("msg", "没有找到相关记录");
+		}
+		mav.setViewName("account/index");
+		return mav;
 	}
-	
-	@RequestMapping(value = "getCategories.htm")
-	@ResponseBody
-	public Map<String,Object> getCategories(Enums enums){
-		Map<String, Object> result = new HashMap<String, Object>();
-		result.put("categoryList", service.getCategory(enums));
-		result.put("success", true);
-		return result;
+
+	@RequestMapping(value = "deleteaccbook.htm")
+	public ModelAndView deleteAccountingBook(AccountingBook accountingBook, RedirectAttributes modelMap) {
+		ModelAndView mav = new ModelAndView();
+		mav.addObject("title", PAGE_TITLE);
+		mav.addObject("navMenu", PAGE_SUB_MENU);
+		try {
+			service.deleteAccount(accountingBook);
+			modelMap.addFlashAttribute("success", "success");
+			modelMap.addFlashAttribute("msg", "删除成功！");
+		} catch (ServiceException e) {
+			modelMap.addFlashAttribute("success", "error");
+			modelMap.addFlashAttribute("msg", e.getMessage());
+		}
+		mav.setViewName("redirect:/account/searchaccbook.htm");
+		return mav;
 	}
 }

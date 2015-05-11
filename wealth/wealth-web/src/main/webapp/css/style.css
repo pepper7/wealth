@@ -7,7 +7,11 @@ body{
 	*margin:0px;
 	text-align:center;
 	background-color: #f1f1f1;
+	/*background-image:url("../images/background.jpg");
+	background-repeat:no-repeat;
+	background-position:center;*/
 }
+
 img{border:0px;}
 a:link{text-decoration:none;text-decoration:none;}
 a:visited{text-decoration:none;text-decoration:none;}
@@ -16,19 +20,32 @@ body, h1, h2, h3, input, p {
     color: #34302D;
     font-family: "Varela Round","sans-serif";
     font-weight: 400;
+	/*color: white;*/
 }
 
-.slidemenu ul li{
-list-style-image:url('../images/icon/05_24x24.png');
-list-style-position : outside;
-height:30px; line-height:30px;
+header{height:50px;}
+footer{
+	line-height: 18px;
+	font-size: 12px;
 }
-.slidemenu ul li a span{
-	font-size: 18px;
-	text-shadow: 1px 1px 1px #676767;
-	font-weight:bold;
-	color:#FF9966;
+.containt{
+	max-width:1024px;
+	padding-right: 15px;
+	padding-left: 15px;
+	margin-right: auto;
+	margin-left: auto;
 }
+.main_content{
+	text-align:center;
+	max-width:1024px;
+	min-height:560px;
+	margin-right: auto;
+	margin-left: auto;
+	padding: 3px 0;
+}
+
+thead{text-align:center;}
+table,th,td{border: 1px solid black;font-family: "Arial", "Helvetica", "Verdana", "sans-serif";font-size: 12px;}
 
 .necessary{
 	color: #ff3333;

@@ -4,16 +4,18 @@
 <html>
 <head>
 <title>${title}</title>
-<jsp:include page="../includes.jsp"/>
+<jsp:include page="../header.jsp"/>
 </head>
 <body>
+<div class="main_content">
+	<jsp:include page="../menubar.jsp"/>
 	<div>
 		<c:if test="${!empty sessionScope.currentAccBook}">
 			<form action="savejournal.htm" name="editJournalForm" method="POST">
 				<input type="hidden" name="accBookId" value="${journal.accBookId}">
 				<input type="hidden" name="journalId" value="${journal.journalId}">
 				<fieldset>
-				<table>
+				<table class="table table-striped table-bordered">
 					<tr><td>总类<select name="topCategory">
 						<option value="">&nbsp;</option>
 						<c:if test="${!empty topCategoryList}">
@@ -38,7 +40,7 @@
 							</c:forEach>
 						</c:if>
 						</select></td>
-					<td></td></tr>
+					</tr>
 					<tr><td>日期<input name="journalDatetime" value="${journal.journalDate}"><span class="necessary"> *</span></td><td>项目<input name="item" value="${journal.item}"><span class="necessary"> *</span></td><td>数量<input name="quantity" value="${journal.quantity}"><span class="necessary"> *</span></td></tr>
 					<tr><td>单价<input name="unitPrice" value="${journal.unitPrice}"><span class="necessary"> *</span></td><td>优惠价<input name="discountPrice" value="${journal.discountPrice}"></td><td>金额<input name="amount" value="${journal.amount}"><span class="necessary"> *</span></td></tr>
 					<tr><td>单位<input name="uom" value="${journal.uom}"></td><td>规格<input name="specification" value="${journal.specification}"></td><td>品牌<input name="brand" value="${journal.brand}"></td></tr>
@@ -46,17 +48,21 @@
 					<tr><td colspan="3">描述<input name="description" value="${journal.description}"></td></tr>
 				</table>
 				</fieldset>
-				<input type="submit" class="button" value="提交">
+				<button class="btn btn-primary btn-sm" type="submit"><span class="glyphicon glyphicon-floppy-disk"></span> 保存</button>
+				<a href="${pageContext.request.contextPath}/account/journal.htm" class="btn btn-danger btn-sm" type="button"><span class="glyphicon glyphicon-arrow-left"></span> 取消</a>
 			</form>
 		</c:if>
 	</div>
+</div>
+<jsp:include page="../footer.jsp"/>
 </body>
 <script>
 $(function(){
-	$(":text[name=journalDatetime]").datepicker({
-		showOn: 'button',
-        buttonImageOnly: false,
-		dateFormat:'yy-mm-dd'
+	$(":text[name=journalDatetime]").datetimepicker({
+		format:'yyyy-mm-dd',
+		minView:2,
+		maxView:2,
+		todayHighlight:true
 	});
 	
 	$("select[name=topCategory],select[name=mainCategory]").change(function(){
@@ -72,7 +78,7 @@ $(function(){
 		$(subObj).empty();
 		$.ajax({
 			type:'POST',
-			url:'${pageContext.request.contextPath}/getCategories.htm',
+			url:'${pageContext.request.contextPath}/account/getCategories.htm',
 			dataType:'json',
 			data:{"parentEnumId":id},
 			success:function(data){

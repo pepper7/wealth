@@ -3,8 +3,8 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <html>
 <head>
-<title>${result.title}</title>
-<jsp:include page="../includes.jsp"/>
+<title>${title}</title>
+<jsp:include page="../header.jsp"/>
 <script type="text/javascript" src="${pageContext.request.contextPath}/images/js/FusionCharts/FusionCharts.js"></script>
 <style type="text/css">
 	#reports{overflow:hidden;}
@@ -12,20 +12,22 @@
 </style>
 </head>
 <body>
+<div class="main_content">
+<jsp:include page="../menubar.jsp"/>
 	<div>
 		<c:if test="${!empty sessionScope.currentAccBook}">
 			<form action="addjournal.htm" name="addJournalForm" method="POST">
 				<input type="hidden" name="accBookId" value="${sessionScope.currentAccBook.accBookId}">
 				<fieldset>
-				<table>
-					<tr><td>总类<select name="topCategory">
+				<table class="table table-striped table-bordered">
+					<tr><td>总类<select name="topCategory" title="" data-toggle="tooltip" data-placement="bottom">
 						<option value="">&nbsp;</option>
-						<c:if test="${!empty result.topCategoryList}">
-							<c:forEach items="${result.topCategoryList}" var="topCategory">
+						<c:if test="${!empty topCategoryList}">
+							<c:forEach items="${topCategoryList}" var="topCategory">
 								<option value="${topCategory.enumId }">${topCategory.enumName }</option>
 							</c:forEach>
 						</c:if>
-					</select></td><td>大类<select name="mainCategory"></select></td><td>小类<select name="subCategory"></select></td><td></td></tr>
+					</select></td><td>大类<select name="mainCategory" title="" data-toggle="tooltip" data-placement="bottom"></select></td><td>小类<select name="subCategory" title="" data-toggle="tooltip" data-placement="bottom"></select></td></tr>
 					<tr><td>日期<input name="journalDatetime"><span class="necessary"> *</span></td><td>项目<input name="item"><span class="necessary"> *</span></td><td>数量<input name="quantity"><span class="necessary"> *</span></td></tr>
 					<tr><td>单价<input name="unitPrice"><span class="necessary"> *</span></td><td>优惠价<input name="discountPrice"></td><td>金额<input name="amount"><span class="necessary"> *</span></td></tr>	
 					<tr><td>单位<input name="uom"></td><td>规格<input name="specification"></td><td>品牌<input name="brand"></td></tr>
@@ -33,22 +35,26 @@
 					<tr><td colspan="3">描述<input name="description"></td></tr>
 				</table>
 				</fieldset>
-				<input type="submit" class="button" value="提交">
+				<button class="btn btn-primary btn-sm" type="submit"><span class="glyphicon glyphicon-floppy-disk"></span> 添加</button>
+				<a href="${pageContext.request.contextPath}/account/journal.htm" class="btn btn-danger btn-sm" type="button"><span class="glyphicon glyphicon-arrow-left"></span> 取消</a>
 			</form>
 		</c:if>
 	</div>
 	<div id="reports">
 		<div id="rptPriceHis">The History Price Report!</div>
 	</div>
+</div>
+<jsp:include page="../footer.jsp"/>
 </body>
 <script>
 $(function(){
-	$(":text[name=journalDatetime]").datepicker({
-		showOn: 'button',
-        buttonImageOnly: false,
-		dateFormat:'yy-mm-dd'
+	$(":text[name=journalDatetime]").datetimepicker({
+		format:'yyyy-mm-dd',
+		minView:2,
+		maxView:2,
+		todayHighlight:true
 	});
-	$(":text[name=journalDatetime]").datepicker("setDate",new Date());
+	//$(":text[name=journalDatetime]").datetimepicker("setDate",new Date());
 	
 	$("select[name=topCategory],select[name=mainCategory]").change(function(){
 		var obj = $(this);
@@ -57,13 +63,15 @@ $(function(){
 		if("topCategory" == obj.attr("name")){
 			subObj = $("select[name=mainCategory]");
 			$("select[name=subCategory]").empty();
+			$("select[name=subCategory]").attr('data-original-title','');
 		}else if("mainCategory" == obj.attr("name")){
 			subObj = $("select[name=subCategory]");
 		}
 		$(subObj).empty();
+		$(subObj).attr('data-original-title','');
 		$.ajax({
 			type:'POST',
-			url:'${pageContext.request.contextPath}/getCategories.htm',
+			url:'${pageContext.request.contextPath}/account/getCategories.htm',
 			dataType:'json',
 			data:{"parentEnumId":id},
 			success:function(data){
@@ -81,6 +89,28 @@ $(function(){
 				}
 			},
 			error:function(){
+			}
+		});
+	});
+	
+	$("select[name=mainCategory],select[name=subCategory]").change(function(){
+		var obj = $(this);
+		var id = obj.val();
+		$.ajax({
+			type:'POST',
+			url:'${pageContext.request.contextPath}/account/getCategories.htm',
+			dataType:'json',
+			data:{"enumId":id},
+			success:function(data){
+				if(data.categoryList){
+					$(data.categoryList).each(function(){
+						$(obj).attr('data-original-title',$(this).attr('description'));
+						$(obj).tooltip();
+					});
+				}
+			},
+			error:function(){
+				$(obj).attr('data-original-title','');
 			}
 		});
 	});
@@ -145,10 +175,7 @@ $(function(){
 			$(this).val(amount);
 		}
 	});
-});
-</script>
-<script>
-$(function(){
+
 	var hisReport = new FusionCharts({
 		swfUrl:"${pageContext.request.contextPath}/images/js/FusionCharts/charts/Line.swf", 
 		      id: "rptPriceHisId", 
@@ -156,7 +183,7 @@ $(function(){
 		      height:"300", 
 		      debugMode : false
 		});
-	hisReport.setJSONUrl("getpricehisdatas.htm");
+	hisReport.setJSONUrl("${pageContext.request.contextPath}/getpricehisdatas.htm");
 	hisReport.render("rptPriceHis");
 	
 	$(":text[name=item]").change(function(){
@@ -170,7 +197,7 @@ $(function(){
 
 function refreshPriceHisRpt(item){
 	var chartReference = FusionCharts("rptPriceHisId");
-	chartReference.setJSONUrl("getpricehisdatas.htm?item="+item);
+	chartReference.setJSONUrl("${pageContext.request.contextPath}/getpricehisdatas.htm?item="+item);
 }
 </script>
 </html>
