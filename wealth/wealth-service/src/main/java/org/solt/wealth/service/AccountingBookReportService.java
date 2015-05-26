@@ -1,5 +1,6 @@
 package org.solt.wealth.service;
 
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 
@@ -9,38 +10,63 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class AccountingBookReportService implements
-		IAccountingBookReportService {
+public class AccountingBookReportService implements IAccountingBookReportService {
 
 	@Autowired
 	private IAccountingBookReportDAO dao;
 
-	public List<Map<String, Object>> findTotalJournalAnnual(
-			Map<String, Object> params) {
-		return dao.getTotalJournalYearly(params);
+	public List<Map<String, Object>> findTotalJournalAnnual(Map<String, Object> params) throws ServiceException {
+		try {
+			return dao.getTotalJournalYearly(params);
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new ServiceException("数据库访问异常！");
+		}
 	}
 
-	public List<Map<String, Object>> findTotalJournalMothly(
-			Map<String, Object> params) {
-		return dao.getTotalJournalMothly(params);
+	public List<Map<String, Object>> findTotalJournalMothly(Map<String, Object> params) throws ServiceException {
+		try {
+			return dao.getTotalJournalMothly(params);
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new ServiceException("数据库访问异常！");
+		}
 	}
 
-	public List<Map<String, Object>> findTotalMothlyByCategory(
-			Map<String, Object> params) {
-		return dao.getTotalMothlyByCategory(params);
+	public List<Map<String, Object>> findTotalMothlyByCategory(Map<String, Object> params) throws ServiceException {
+		try {
+			return dao.getTotalMothlyByCategory(params);
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new ServiceException("数据库访问异常！");
+		}
 	}
 
-	public String getJournalMinMonthForYear(Map<String, Object> params) {
-		return dao.getJournalMinMonthForYear(params);
+	public String getJournalMinMonthForYear(Map<String, Object> params) throws ServiceException {
+		try {
+			return dao.getJournalMinMonthForYear(params);
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new ServiceException("数据库访问异常！");
+		}
 	}
 
-	public List<Map<String, Object>> findPriceHisByItem(
-			Map<String, Object> params) {
-		return dao.getPriceHisByItem(params);
+	public List<Map<String, Object>> findPriceHisByItem(Map<String, Object> params) throws ServiceException {
+		try {
+			return dao.getPriceHisByItem(params);
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new ServiceException("数据库访问异常！");
+		}
 	}
 
-	public List<JournalView> findJournalView(Map<String, Object> params) {
-		return dao.findJournalViewByParam(params);
+	public List<JournalView> findJournalView(Map<String, Object> params) throws ServiceException {
+		try {
+			return dao.findJournalViewByParam(params);
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new ServiceException("数据库访问异常！");
+		}
 	}
 
 }

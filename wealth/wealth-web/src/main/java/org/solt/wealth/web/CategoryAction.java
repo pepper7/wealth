@@ -48,7 +48,11 @@ public class CategoryAction {
 		ModelAndView mav = new ModelAndView();
 		mav.addObject("title", PAGE_TITLE);
 		mav.addObject("navMenu", PAGE_SUB_MENU);
-		enums = service.getJournalCategory(enums);
+		try {
+			enums = service.getJournalCategory(enums);
+		} catch (ServiceException e) {
+			e.printStackTrace();
+		}
 		mav.addObject("category", enums);
 		mav.setViewName("account/editCategory");
 		return mav;
@@ -61,7 +65,11 @@ public class CategoryAction {
 		List<Enums> list = null;
 		mav.addObject("title", PAGE_TITLE);
 		mav.addObject("navMenu", PAGE_SUB_MENU);
-		list = service.findJournalCategory(enums);
+		try {
+			list = service.findJournalCategory(enums);
+		} catch (ServiceException e) {
+			e.printStackTrace();
+		}
 		mav.addObject("journalCategoryList", list);
 		mav.addObject("param", enums);
 		if (list.size() == 0) {
@@ -79,9 +87,9 @@ public class CategoryAction {
 		mav.addObject("navMenu", PAGE_SUB_MENU);
 		if (enumsErrors.hasErrors()) {
 			mav.addObject("category", enums);
-			mav.setViewName("account/addCategory");
 			mav.addObject("success", "error");
 			mav.addObject("msg", "数据格式不符合！");
+			mav.setViewName("account/addCategory");
 		} else {
 			try {
 				if (service.addJournalCategory(enums)) {

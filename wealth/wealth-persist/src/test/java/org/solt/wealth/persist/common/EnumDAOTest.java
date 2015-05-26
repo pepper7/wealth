@@ -1,5 +1,7 @@
 package org.solt.wealth.persist.common;
 
+import java.sql.SQLException;
+
 import javax.annotation.Resource;
 
 import org.junit.Assert;
@@ -23,7 +25,7 @@ public class EnumDAOTest {
 	}
 
 	@Test
-	public void getEnumsById() {
+	public void getEnumsById() throws SQLException {
 		Enums enums = null;
 		//查空记录
 		enums = new Enums();

@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <jsp:include page="includes.jsp"/>
 <header>
 <nav class="navbar navbar-default">
@@ -13,8 +14,13 @@
 		<div class="collapse navbar-collapse">
 			<p class="navbar-text">Wealth</p>
 			<ul class="nav navbar-nav navbar-right">
-				<li><a href="${pageContext.request.contextPath}/index.htm">登录</a></li>
-				<li><a href="${pageContext.request.contextPath}/index.htm">注销</a></li>
+				<c:if test="${empty sessionScope['userLogin-salt'] }">
+					<li><a href="${pageContext.request.contextPath}/login.htm">登录</a></li>
+				</c:if>
+				<c:if test="${!empty sessionScope['userLogin-salt'] }">
+					<li>${sessionScope["userLogin-salt"].userLoginId}</li>
+					<li><a href="${pageContext.request.contextPath}/logout.htm">注销</a></li>
+				</c:if>
 			</ul>
 		</div>
 	</div>

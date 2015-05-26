@@ -1,5 +1,7 @@
 package org.solt.wealth.persist;
 
+import java.sql.SQLException;
+
 import javax.annotation.Resource;
 
 import org.junit.Assert;
@@ -17,7 +19,7 @@ public class AccountingBookDAOTest {
 	private IAccountingBookDAO dao;
 	
 	@Test
-	public void getAccountingBookById(){
+	public void getAccountingBookById() throws SQLException{
 		AccountingBook acc = null;
 		//查空记录
 		acc = new AccountingBook();

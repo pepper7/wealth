@@ -14,11 +14,11 @@ public class EnumDAO implements IEnumDAO {
 	@Autowired
 	private SqlSessionTemplate sqlSession;
 
-	public Enums getEnumsById(Enums enums) {
+	public Enums getEnumsById(Enums enums) throws SQLException {
 		return (Enums) sqlSession.selectOne("org.solt.wealth.model.common.Enums.getEnums", enums);
 	}
 
-	public List<Enums> findEnumsByParam(Enums enums) {
+	public List<Enums> findEnumsByParam(Enums enums) throws SQLException {
 		return sqlSession.selectList("org.solt.wealth.model.common.Enums.findEnumsByParam", enums);
 	}
 
@@ -26,18 +26,18 @@ public class EnumDAO implements IEnumDAO {
 		return sqlSession.insert("org.solt.wealth.model.common.Enums.insertEnums", enums);
 	}
 
-	public int updateEnums(Enums enums) {
+	public int updateEnums(Enums enums) throws SQLException {
 		return sqlSession.update("org.solt.wealth.model.common.Enums.updateEnums", enums);
 	}
 
-	public int deleteEnums(Enums enums) {
+	public int deleteEnums(Enums enums) throws SQLException {
 		return sqlSession.delete("org.solt.wealth.model.common.Enums.deleteEnums", enums);
 	}
 
 	/**
 	 * @see IEnumDAO.findEnumsByParamForLayer
 	 */
-	public List<Enums> findEnumsByParamForLayer(Enums enums) {
+	public List<Enums> findEnumsByParamForLayer(Enums enums) throws SQLException {
 		return sqlSession.selectList("org.solt.wealth.model.common.Enums.findEnumsByParamForLayer", enums);
 	}
 

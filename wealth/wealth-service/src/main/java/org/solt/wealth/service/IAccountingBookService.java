@@ -8,28 +8,28 @@ import org.solt.wealth.model.Journal;
 
 public interface IAccountingBookService {
 
-	public AccountingBook getAccount(AccountingBook accountingBook);
+	public AccountingBook getAccount(AccountingBook accountingBook) throws ServiceException;
 
-	public List<AccountingBook> findAccounts(AccountingBook accountingBook);
+	public List<AccountingBook> findAccounts(AccountingBook accountingBook) throws ServiceException;
 
-	public boolean addAccount(AccountingBook accountingBook);
+	public boolean addAccount(AccountingBook accountingBook) throws ServiceException;
 
-	public boolean updateAccount(AccountingBook accountingBook);
-	
+	public boolean updateAccount(AccountingBook accountingBook) throws ServiceException;
+
 	public boolean deleteAccount(AccountingBook accountingBook) throws ServiceException;
 
-	public List<Journal> findJournal(Journal journal);
+	public List<Journal> findJournal(Journal journal) throws ServiceException;
 
-	public List<Journal> findJournal(Map<String, Object> params);
+	public List<Journal> findJournal(Map<String, Object> params) throws ServiceException;
 
-	public Double totalJournal(Map<String, Object> params);
+	public Double totalJournal(Map<String, Object> params) throws ServiceException;
 
-	public boolean addJournal(Journal journal);
+	public boolean addJournal(Journal journal) throws ServiceException;
 
-	public Journal getJournal(Journal journal);
+	public Journal getJournal(Journal journal) throws ServiceException;
 
-	public boolean saveJournal(Journal journal);
+	public boolean saveJournal(Journal journal) throws ServiceException;
 
-	public boolean deleteJournal(Journal journal);
+	public boolean deleteJournal(Journal journal) throws ServiceException;
 
 }

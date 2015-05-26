@@ -16,6 +16,7 @@ import org.solt.wealth.model.common.Enums;
 import org.solt.wealth.service.IAccountingBookReportService;
 import org.solt.wealth.service.IAccountingBookService;
 import org.solt.wealth.service.IJournalCategoryService;
+import org.solt.wealth.service.ServiceException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -44,9 +45,15 @@ public class ReportAction {
 		ModelAndView mav = new ModelAndView();
 		mav.addObject("title", PAGE_TITLE);
 		mav.addObject("navMenu", PAGE_SUB_MENU);
-		mav.addObject("accBookList", service.findAccounts(null));
+		try {
+			mav.addObject("accBookList", service.findAccounts(null));
+		} catch (ServiceException e) {
+		}
 		Enums enums = new Enums();
-		mav.addObject("topCategoryList", categoryService.findJournalCategoryForLayer(enums));
+		try {
+			mav.addObject("topCategoryList", categoryService.findJournalCategoryForLayer(enums));
+		} catch (ServiceException e) {
+		}
 		mav.setViewName("report/reports");
 		return mav;
 	}
@@ -58,7 +65,7 @@ public class ReportAction {
 		ModelAndView mav = new ModelAndView();
 		mav.setViewName("reportMonthlyPdf");
 		AccountingBook accBook = (AccountingBook) httpSession.getAttribute("currentAccBook");
-		System.err.println("AccountingBook="+accBook);
+		System.err.println("AccountingBook=" + accBook);
 		if (null != accBook) {
 			Map<String, Object> params = new HashMap<String, Object>();
 			params.put("accBookId", accBook.getAccBookId());
@@ -70,8 +77,11 @@ public class ReportAction {
 			params.put("orderList", "journal_date");
 			mav.addObject("month", month);
 			mav.addObject("accBook", accBook);
-			mav.addObject("journalList", service.findJournal(params));
-			mav.addObject("total", service.totalJournal(params));
+			try {
+				mav.addObject("journalList", service.findJournal(params));
+				mav.addObject("total", service.totalJournal(params));
+			} catch (ServiceException e) {
+			}
 		}
 		return mav;
 	}
@@ -82,13 +92,16 @@ public class ReportAction {
 		ModelAndView mav = new ModelAndView();
 		mav.addObject("title", PAGE_TITLE);
 		mav.addObject("navMenu", PAGE_SUB_MENU);
-		accountingBook = service.getAccount(accountingBook);
+		try {
+			accountingBook = service.getAccount(accountingBook);
+		} catch (ServiceException e) {
+		}
 		httpSession.setAttribute("currentAccBook", accountingBook);
 		mav.addObject("currentAccBook", accountingBook);
 		mav.setViewName("redirect:/reports.htm");
 		return mav;
 	}
-	
+
 	@RequestMapping(value = "/getyearlydatas.htm")
 	// @RecordLog(description="获得按年统计数据，所有")
 	@ResponseBody
@@ -100,9 +113,12 @@ public class ReportAction {
 			params.put("accBookId", accBook.getAccBookId());
 
 			List<Map<String, Object>> datas = new ArrayList<Map<String, Object>>();
-			for (Map<String, Object> map : reportService.findTotalJournalAnnual(params)) {
-				map.put("link", "javascript:refreshMonthlyRpt('" + map.get("label").toString() + "');");
-				datas.add(map);
+			try {
+				for (Map<String, Object> map : reportService.findTotalJournalAnnual(params)) {
+					map.put("link", "javascript:refreshMonthlyRpt('" + map.get("label").toString() + "');");
+					datas.add(map);
+				}
+			} catch (ServiceException e) {
 			}
 			result.put("data", datas);
 
@@ -133,9 +149,12 @@ public class ReportAction {
 			}
 			params.put("year", year.trim());
 			List<Map<String, Object>> datas = new ArrayList<Map<String, Object>>();
-			for (Map<String, Object> map : reportService.findTotalJournalMothly(params)) {
-				map.put("link", "javascript:refreshMainCategoryRpt('" + map.get("label").toString() + "');");
-				datas.add(map);
+			try {
+				for (Map<String, Object> map : reportService.findTotalJournalMothly(params)) {
+					map.put("link", "javascript:refreshMainCategoryRpt('" + map.get("label").toString() + "');");
+					datas.add(map);
+				}
+			} catch (ServiceException e) {
 			}
 			result.put("data", datas);
 
@@ -169,12 +188,15 @@ public class ReportAction {
 			params.put("month", month);
 
 			List<Map<String, Object>> datas = new ArrayList<Map<String, Object>>();
-			for (Map<String, Object> map : reportService.findTotalMothlyByCategory(params)) {
-				map.put("link", "javascript:refreshMainCategoryDetailRpt('" + month + "','"
-						+ map.get("main_category").toString() + "');");
-				datas.add(map);
+			try {
+				for (Map<String, Object> map : reportService.findTotalMothlyByCategory(params)) {
+					map.put("link",
+							"javascript:refreshMainCategoryDetailRpt('" + month + "','"
+									+ map.get("main_category").toString() + "');");
+					datas.add(map);
+				}
+			} catch (ServiceException e) {
 			}
-
 			result.put("data", datas);
 
 			Map<String, Object> chart = new HashMap<String, Object>();
@@ -202,8 +224,10 @@ public class ReportAction {
 				year = Calendar.getInstance().get(Calendar.YEAR) + "";
 			}
 			params.put("year", year.trim());
-
-			result.put("month", reportService.getJournalMinMonthForYear(params));
+			try {
+				result.put("month", reportService.getJournalMinMonthForYear(params));
+			} catch (ServiceException e) {
+			}
 		}
 		result.put("success", true);
 		return result;
@@ -224,7 +248,10 @@ public class ReportAction {
 			}
 			params.put("item", item.trim());
 			List<Map<String, Object>> datas = new ArrayList<Map<String, Object>>();
-			datas = reportService.findPriceHisByItem(params);
+			try {
+				datas = reportService.findPriceHisByItem(params);
+			} catch (ServiceException e) {
+			}
 			result.put("data", datas);
 
 			Map<String, Object> chart = new HashMap<String, Object>();
@@ -256,7 +283,10 @@ public class ReportAction {
 			params.put("month", month);
 			params.put("mainCategory", category);
 			List<Journal> datas = new ArrayList<Journal>();
-			datas = service.findJournal(params);
+			try {
+				datas = service.findJournal(params);
+			} catch (ServiceException e) {
+			}
 			result.put("details", datas);
 		}
 		result.put("success", true);

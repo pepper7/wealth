@@ -1,5 +1,6 @@
 package org.solt.wealth.persist;
 
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 
@@ -14,46 +15,31 @@ public class AccountingBookReportDAO implements IAccountingBookReportDAO {
 	@Autowired
 	private SqlSessionTemplate sqlSession;
 
-	private final Logger logger = Logger
-			.getLogger(AccountingBookReportDAO.class);
+	private final Logger logger = Logger.getLogger(AccountingBookReportDAO.class);
 
-	public List<Map<String, Object>> getTotalJournalYearly(
-			Map<String, Object> params) {
-		return sqlSession.selectList(
-				"org.solt.wealth.model.Journal.getTotalJournalYearly", params);
+	public List<Map<String, Object>> getTotalJournalYearly(Map<String, Object> params) throws SQLException {
+		return sqlSession.selectList("org.solt.wealth.model.Journal.getTotalJournalYearly", params);
 	}
 
-	public List<Map<String, Object>> getTotalJournalMothly(
-			Map<String, Object> params) {
-		return sqlSession.selectList(
-				"org.solt.wealth.model.Journal.getTotalJournalMothly", params);
+	public List<Map<String, Object>> getTotalJournalMothly(Map<String, Object> params) throws SQLException {
+		return sqlSession.selectList("org.solt.wealth.model.Journal.getTotalJournalMothly", params);
 	}
 
-	public List<Map<String, Object>> getTotalMothlyByCategory(
-			Map<String, Object> params) {
-		return sqlSession.selectList(
-				"org.solt.wealth.model.Journal.getTotalMainCategoryByMoth",
-				params);
+	public List<Map<String, Object>> getTotalMothlyByCategory(Map<String, Object> params) throws SQLException {
+		return sqlSession.selectList("org.solt.wealth.model.Journal.getTotalMainCategoryByMoth", params);
 	}
 
-	public String getJournalMinMonthForYear(Map<String, Object> params) {
-		return sqlSession.selectOne(
-				"org.solt.wealth.model.Journal.getJournalMinMonthForYear",
-				params);
+	public String getJournalMinMonthForYear(Map<String, Object> params) throws SQLException {
+		return sqlSession.selectOne("org.solt.wealth.model.Journal.getJournalMinMonthForYear", params);
 	}
 
-	public List<Map<String, Object>> getPriceHisByItem(
-			Map<String, Object> params) {
-		return sqlSession.selectList(
-				"org.solt.wealth.model.Journal.getJournalPriceHis", params);
+	public List<Map<String, Object>> getPriceHisByItem(Map<String, Object> params) throws SQLException {
+		return sqlSession.selectList("org.solt.wealth.model.Journal.getJournalPriceHis", params);
 	}
 
-	public List<JournalView> findJournalViewByParam(Map<String, Object> params) {
-		logger.debug(">>>AccountingBookReportDAO.findJournalViewByParam(params="
-				+ params + ")");
-		return sqlSession.selectList(
-				"org.solt.wealth.model.ReportAcc.findJournalViewByParam",
-				params);
+	public List<JournalView> findJournalViewByParam(Map<String, Object> params) throws SQLException {
+		logger.debug(">>>AccountingBookReportDAO.findJournalViewByParam(params=" + params + ")");
+		return sqlSession.selectList("org.solt.wealth.model.ReportAcc.findJournalViewByParam", params);
 	}
 
 }

@@ -18,7 +18,7 @@ public class AccountingBookServiceTest {
 	private IAccountingBookService service;
 
 	@Test
-	public void getAccount() {
+	public void getAccount() throws ServiceException {
 		AccountingBook acc = null;
 		//
 		acc = new AccountingBook();

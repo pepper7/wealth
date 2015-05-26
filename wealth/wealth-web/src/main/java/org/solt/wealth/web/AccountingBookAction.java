@@ -39,7 +39,11 @@ public class AccountingBookAction {
 		mav.addObject("navMenu", PAGE_SUB_MENU);
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM");
 		String month = dateFormat.format(new Date());
-		mav.addObject("accBookList", service.findAccounts(null));
+		try {
+			mav.addObject("accBookList", service.findAccounts(null));
+		} catch (ServiceException e) {
+			e.printStackTrace();
+		}
 		AccountingBook accBook = (AccountingBook) httpSession.getAttribute("currentAccBook");
 
 		if (null != accBook) {
@@ -47,8 +51,12 @@ public class AccountingBookAction {
 			Map<String, Object> params = new HashMap<String, Object>();
 			params.put("month", month);
 			params.put("accBookId", accBook.getAccBookId());
-			mav.addObject("journalList", reportService.findJournalView(params));
-			mav.addObject("total", service.totalJournal(params));
+			try {
+				mav.addObject("journalList", reportService.findJournalView(params));
+				mav.addObject("total", service.totalJournal(params));
+			} catch (ServiceException e) {
+				e.printStackTrace();
+			}
 			mav.addObject("month", month);
 		}
 		mav.setViewName("account/index");
@@ -71,7 +79,11 @@ public class AccountingBookAction {
 		ModelAndView mav = new ModelAndView();
 		mav.addObject("title", PAGE_TITLE);
 		mav.addObject("navMenu", PAGE_SUB_MENU);
-		accountingBook = service.getAccount(accountingBook);
+		try {
+			accountingBook = service.getAccount(accountingBook);
+		} catch (ServiceException e) {
+			e.printStackTrace();
+		}
 		mav.addObject("accountingBook", accountingBook);
 		mav.setViewName("account/editAccBook");
 		return mav;
@@ -83,10 +95,14 @@ public class AccountingBookAction {
 		ModelAndView mav = new ModelAndView();
 		mav.addObject("title", PAGE_TITLE);
 		mav.addObject("navMenu", PAGE_SUB_MENU);
-		if (service.addAccount(accountingBook)) {
-			mav.setViewName("redirect:/account/index.htm");
-		} else {
-			mav.setViewName("account/addAccBook");
+		try {
+			if (service.addAccount(accountingBook)) {
+				mav.setViewName("redirect:/account/index.htm");
+			} else {
+				mav.setViewName("account/addAccBook");
+			}
+		} catch (ServiceException e) {
+			e.printStackTrace();
 		}
 		return mav;
 	}
@@ -96,10 +112,14 @@ public class AccountingBookAction {
 		ModelAndView mav = new ModelAndView();
 		mav.addObject("title", PAGE_TITLE);
 		mav.addObject("navMenu", PAGE_SUB_MENU);
-		if (service.updateAccount(accountingBook)) {
-			mav.setViewName("redirect:/account/index.htm");
-		} else {
-			mav.setViewName("account/addAccBook");
+		try {
+			if (service.updateAccount(accountingBook)) {
+				mav.setViewName("redirect:/account/index.htm");
+			} else {
+				mav.setViewName("account/addAccBook");
+			}
+		} catch (ServiceException e) {
+			e.printStackTrace();
 		}
 		return mav;
 	}
@@ -111,7 +131,11 @@ public class AccountingBookAction {
 		mav.addObject("navMenu", PAGE_SUB_MENU);
 		mav.addObject("param", accountingBook);
 		List<AccountingBook> list = null;
-		list = service.findAccounts(accountingBook);
+		try {
+			list = service.findAccounts(accountingBook);
+		} catch (ServiceException e) {
+			e.printStackTrace();
+		}
 		mav.addObject("accbookList", list);
 		if (list.size() == 0) {
 			mav.addObject("success", "info");

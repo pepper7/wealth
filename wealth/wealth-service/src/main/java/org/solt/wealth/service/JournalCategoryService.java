@@ -13,31 +13,61 @@ public class JournalCategoryService implements IJournalCategoryService {
 	@Autowired
 	private IEnumDAO enumDao;
 
-	public Enums getJournalCategory(Enums enums) {
-		return enumDao.getEnumsById(enums);
+	public Enums getJournalCategory(Enums enums) throws ServiceException {
+		try {
+			return enumDao.getEnumsById(enums);
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new ServiceException("数据库访问异常！");
+		}
 	}
 
-	public List<Enums> findJournalCategory(Enums enums) {
+	public List<Enums> findJournalCategory(Enums enums) throws ServiceException {
 		enums.setEnumType("CONSUMPTION_TYPE");
-		return enumDao.findEnumsByParam(enums);
+		try {
+			return enumDao.findEnumsByParam(enums);
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new ServiceException("数据库访问异常！");
+		}
 	}
 
-	public boolean addJournalCategory(Enums enums) throws ServiceException,SQLException {
+	public boolean addJournalCategory(Enums enums) throws ServiceException {
 		enums.setEnumType("CONSUMPTION_TYPE");
-		return enumDao.insertEnums(enums) > 0 ? true : false;
+		try {
+			return enumDao.insertEnums(enums) > 0 ? true : false;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new ServiceException("数据库访问异常！");
+		}
 	}
 
-	public boolean updateJournalCategory(Enums enums) {
-		return enumDao.updateEnums(enums) > 0 ? true : false;
+	public boolean updateJournalCategory(Enums enums) throws ServiceException {
+		try {
+			return enumDao.updateEnums(enums) > 0 ? true : false;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new ServiceException("数据库访问异常！");
+		}
 	}
 
-	public boolean deleteJournalCategory(Enums enums) throws ServiceException{
-		return enumDao.deleteEnums(enums) > 0 ? true : false;
+	public boolean deleteJournalCategory(Enums enums) throws ServiceException {
+		try {
+			return enumDao.deleteEnums(enums) > 0 ? true : false;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new ServiceException("数据库访问异常！");
+		}
 	}
 
-	public List<Enums> findJournalCategoryForLayer(Enums enums) {
+	public List<Enums> findJournalCategoryForLayer(Enums enums) throws ServiceException {
 		enums.setEnumType("CONSUMPTION_TYPE");
-		return enumDao.findEnumsByParamForLayer(enums);
+		try {
+			return enumDao.findEnumsByParamForLayer(enums);
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new ServiceException("数据库访问异常！");
+		}
 	}
 
 }

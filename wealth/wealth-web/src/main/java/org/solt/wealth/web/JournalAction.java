@@ -15,6 +15,7 @@ import org.solt.wealth.model.common.Enums;
 import org.solt.wealth.service.IAccountingBookReportService;
 import org.solt.wealth.service.IAccountingBookService;
 import org.solt.wealth.service.IJournalCategoryService;
+import org.solt.wealth.service.ServiceException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -46,7 +47,10 @@ public class JournalAction {
 		mav.addObject("navMenu", PAGE_SUB_MENU);
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM");
 		String month = dateFormat.format(new Date());
-		mav.addObject("accBookList", service.findAccounts(null));
+		try {
+			mav.addObject("accBookList", service.findAccounts(null));
+		} catch (ServiceException e) {
+		}
 		AccountingBook accBook = (AccountingBook) httpSession.getAttribute("currentAccBook");
 
 		if (null != accBook) {
@@ -54,8 +58,11 @@ public class JournalAction {
 			Map<String, Object> params = new HashMap<String, Object>();
 			params.put("month", month);
 			params.put("accBookId", accBook.getAccBookId());
-			mav.addObject("journalList", reportService.findJournalView(params));
-			mav.addObject("total", service.totalJournal(params));
+			try {
+				mav.addObject("journalList", reportService.findJournalView(params));
+				mav.addObject("total", service.totalJournal(params));
+			} catch (ServiceException e) {
+			}
 			mav.addObject("month", month);
 		}
 		mav.setViewName("account/journal");
@@ -69,7 +76,10 @@ public class JournalAction {
 		mav.addObject("title", PAGE_TITLE);
 		mav.addObject("navMenu", PAGE_SUB_MENU);
 		Enums enums = new Enums();
-		mav.addObject("topCategoryList", categoryService.findJournalCategoryForLayer(enums));
+		try {
+			mav.addObject("topCategoryList", categoryService.findJournalCategoryForLayer(enums));
+		} catch (ServiceException e) {
+		}
 		mav.setViewName("account/addJournal");
 		return mav;
 	}
@@ -81,15 +91,18 @@ public class JournalAction {
 		mav.addObject("title", PAGE_TITLE);
 		mav.addObject("navMenu", PAGE_SUB_MENU);
 		Enums enums = new Enums();
-		mav.addObject("topCategoryList", categoryService.findJournalCategoryForLayer(enums));
-		journal = service.getJournal(journal);
-		if (null != journal.getTopCategory()) {
-			enums.setParentEnumId(journal.getTopCategory());
-			mav.addObject("mainCategoryList", categoryService.findJournalCategoryForLayer(enums));
-		}
-		if (null != journal.getMainCategory()) {
-			enums.setParentEnumId(journal.getMainCategory());
-			mav.addObject("subCategoryList", categoryService.findJournalCategoryForLayer(enums));
+		try {
+			mav.addObject("topCategoryList", categoryService.findJournalCategoryForLayer(enums));
+			journal = service.getJournal(journal);
+			if (null != journal.getTopCategory()) {
+				enums.setParentEnumId(journal.getTopCategory());
+				mav.addObject("mainCategoryList", categoryService.findJournalCategoryForLayer(enums));
+			}
+			if (null != journal.getMainCategory()) {
+				enums.setParentEnumId(journal.getMainCategory());
+				mav.addObject("subCategoryList", categoryService.findJournalCategoryForLayer(enums));
+			}
+		} catch (ServiceException e) {
 		}
 		mav.addObject("journal", journal);
 		mav.setViewName("account/editJournal");
@@ -102,7 +115,10 @@ public class JournalAction {
 		ModelAndView mav = new ModelAndView();
 		mav.addObject("title", PAGE_TITLE);
 		mav.addObject("navMenu", PAGE_SUB_MENU);
-		accountingBook = service.getAccount(accountingBook);
+		try {
+			accountingBook = service.getAccount(accountingBook);
+		} catch (ServiceException e) {
+		}
 		httpSession.setAttribute("currentAccBook", accountingBook);
 		mav.addObject("currentAccBook", accountingBook);
 		mav.setViewName("redirect:/account/journal.htm");
@@ -125,11 +141,13 @@ public class JournalAction {
 			// e.printStackTrace();
 			// return new ModelAndView("account/addJournal", "result", result);
 			// }
-
-			if (service.addJournal(journal)) {
-				mav.setViewName("redirect:/account/journal.htm");
-			} else {
-				mav.setViewName("account/addJournal");
+			try {
+				if (service.addJournal(journal)) {
+					mav.setViewName("redirect:/account/journal.htm");
+				} else {
+					mav.setViewName("account/addJournal");
+				}
+			} catch (ServiceException e) {
 			}
 		} else {
 			mav.setViewName("account/addJournal");
@@ -157,11 +175,13 @@ public class JournalAction {
 		} else {
 			mav.setViewName("account/editJournal");
 		}
-
-		if (service.saveJournal(journal)) {
-			mav.setViewName("redirect:/account/journal.htm");
-		} else {
-			mav.setViewName("account/editJournal");
+		try {
+			if (service.saveJournal(journal)) {
+				mav.setViewName("redirect:/account/journal.htm");
+			} else {
+				mav.setViewName("account/editJournal");
+			}
+		} catch (ServiceException e) {
 		}
 		return mav;
 	}
@@ -172,24 +192,33 @@ public class JournalAction {
 		mav.addObject("title", PAGE_TITLE);
 		mav.addObject("navMenu", PAGE_SUB_MENU);
 		mav.setViewName("redirect:/account/jounral.htm");
-		service.deleteJournal(journal);
+		try {
+			service.deleteJournal(journal);
+		} catch (ServiceException e) {
+		}
 		return mav;
 	}
 
 	@RequestMapping(value = "searchjournal.htm")
 	public ModelAndView searchJournal(Journal journal, @RequestParam("searchMonth") String month) {
-		logger.debug(">>>org.solt.wealth.web.JournalAction.searchJournal(journal=,month="+month+")");
+		logger.debug(">>>org.solt.wealth.web.JournalAction.searchJournal(journal=,month=" + month + ")");
 		ModelAndView mav = new ModelAndView();
 		mav.addObject("title", PAGE_TITLE);
 		mav.addObject("navMenu", PAGE_SUB_MENU);
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("month", month);
 		params.put("accBookId", journal.getAccBookId());
-		mav.addObject("journalList", reportService.findJournalView(params));
-		mav.addObject("total", service.totalJournal(params));
+		try {
+			mav.addObject("journalList", reportService.findJournalView(params));
+			mav.addObject("total", service.totalJournal(params));
+		} catch (ServiceException e) {
+		}
 		mav.addObject("month", month);
 		// others
-		mav.addObject("accBookList", service.findAccounts(null));
+		try {
+			mav.addObject("accBookList", service.findAccounts(null));
+		} catch (ServiceException e) {
+		}
 		mav.setViewName("account/journal");
 		return mav;
 	}
@@ -198,11 +227,15 @@ public class JournalAction {
 	@ResponseBody
 	public Map<String, Object> getCategories(Enums enums) {
 		Map<String, Object> result = new HashMap<String, Object>();
-		if(null == enums.getEnumId()){
-			result.put("categoryList", categoryService.findJournalCategoryForLayer(enums));
-		}else{
-			result.put("categoryList", categoryService.findJournalCategory(enums));
-		}		
+		try {
+			if (null == enums.getEnumId()) {
+				result.put("categoryList", categoryService.findJournalCategoryForLayer(enums));
+			} else {
+				result.put("categoryList", categoryService.findJournalCategory(enums));
+			}
+		} catch (ServiceException e) {
+			result.put("success", false);
+		}
 		result.put("success", true);
 		return result;
 	}
