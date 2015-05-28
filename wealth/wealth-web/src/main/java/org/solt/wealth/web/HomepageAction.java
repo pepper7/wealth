@@ -5,6 +5,8 @@ import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
 import org.salt.common.MD5Util;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.solt.wealth.model.UserLogin;
 import org.solt.wealth.service.IUserLoginService;
 import org.solt.wealth.service.ServiceException;
@@ -19,22 +21,27 @@ import org.springframework.web.servlet.ModelAndView;
 public class HomepageAction {
 
 	private final static String PAGE_TITLE = "试验场【账簿】";
+	private static final Logger logger = LoggerFactory.getLogger(HomepageAction.class);
 	@Autowired
 	private IUserLoginService service;
 
 	@RequestMapping(value = "index.htm")
 	public ModelAndView toIndexPage(HttpSession httpSession) {
+		logger.debug(">>>HomepageAction.toIndexPage()");
 		ModelAndView mav = new ModelAndView();
 		mav.addObject("title", PAGE_TITLE);
 		mav.setViewName("index");
+		logger.debug("<<<HomepageAction.toIndexPage()");
 		return mav;
 	}
 
 	@RequestMapping(value = "login.htm")
 	public ModelAndView toLoginPage(HttpSession httpSession) {
+		logger.debug(">>>HomepageAction.toLoginPage()");
 		ModelAndView mav = new ModelAndView();
 		mav.addObject("title", PAGE_TITLE);
 		mav.setViewName("login");
+		logger.debug("<<<HomepageAction.toLoginPage()");
 		return mav;
 	}
 
@@ -42,6 +49,7 @@ public class HomepageAction {
 	@RequestMapping(value = "userlogin.htm")
 	public ModelAndView login(HttpSession httpSession, HttpServletRequest request,
 			@Valid @ModelAttribute("userLogin") UserLogin userLogin, BindingResult enumsErrors) {
+		logger.debug(">>>HomepageAction.login(userLogin="+userLogin+")");
 		ModelAndView mav = new ModelAndView();
 		if (enumsErrors.hasErrors()) {
 			mav.addObject("userLogin", userLogin);
@@ -54,7 +62,7 @@ public class HomepageAction {
 				UserLogin user = service.getUserLogin(userLogin);
 				if (user.getPassword().equals(userLogin.getPassword())) {
 					httpSession.setAttribute("userLogin-salt", userLogin);
-					mav.setViewName("index");
+					mav.setViewName("redirect:index.htm");
 				} else {
 					mav.addObject("success", "error");
 					mav.addObject("msg", "账户或密码错误！");
@@ -62,17 +70,22 @@ public class HomepageAction {
 				}
 			} catch (ServiceException e) {
 				e.printStackTrace();
+				logger.error(e.getMessage());
+				mav.addObject("title", PAGE_TITLE);
 				mav.setViewName("login");
 			}
 		}
+		logger.debug("<<<HomepageAction.login()");
 		return mav;
 	}
 
 	@RequestMapping(value = "logout.htm")
 	public ModelAndView logout(HttpSession httpSession, HttpServletRequest request) {
+		logger.debug(">>>HomepageAction.logout()");
 		ModelAndView mav = new ModelAndView();
 		httpSession.removeAttribute("userLogin-salt");
-		mav.setViewName("index");
+		mav.setViewName("redirect:index.htm");
+		logger.debug("<<<HomepageAction.logout()");
 		return mav;
 	}
 }

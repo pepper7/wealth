@@ -8,11 +8,11 @@
 	</resultMap>
 	
 	<select id="getUserLogin" parameterType="UserLogin" resultMap="userLoginMap">
-		select * from User_Login where user_Login_Id = #{userLoginId}
+		select * from user_login where user_Login_Id = #{userLoginId}
 	</select>
 	
 	<select id="findUserLoginByParam" parameterType="UserLogin" resultMap="userLoginMap">
-		select * from User_Login 
+		select * from user_login 
 			where 1=1
 			<if test="userLoginId != null and userLoginId !=''">
 			AND user_Login_Id like '%${userLoginId}%'
@@ -24,7 +24,7 @@
 	</select>
 	
 	<select id="countUserLoginByParam">
-		select count(user_login_id) from UserLogin where 1=1
+		select count(user_login_id) from user_login where 1=1
 		<if test="userLoginId != null and userLoginId !=''">
 		AND user_Login_Id like '%${userLoginId}%'
 		</if>
@@ -34,7 +34,7 @@
 	</select>
 	
 	<insert id="insertUserLogin" parameterType="UserLogin">
-		insert User_Login(user_Login_Id
+		insert user_login(user_Login_Id
 			<if test="password != null and password !=''">,password</if>
 			<if test="status != null and status !=''">,status</if>
 		)values(#{userLoginId}
@@ -44,7 +44,7 @@
 	</insert>
 	
 	<update id="updateUserLogin" parameterType="UserLogin">
-		update User_Login set
+		update user_login set
 		<if test="password != null and password !=''">
 			password = #{password} 
 		</if>
@@ -55,6 +55,6 @@
 	</update>
 	
 	<delete id="deleteUserLogin" parameterType="UserLogin">
-		delete from User_Login where user_Login_Id = #{userLoginId}
+		delete from user_login where user_Login_Id = #{userLoginId}
 	</delete>
 </mapper>

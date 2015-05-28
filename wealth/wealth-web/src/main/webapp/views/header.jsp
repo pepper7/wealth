@@ -18,7 +18,7 @@
 					<li><a href="${pageContext.request.contextPath}/login.htm">登录</a></li>
 				</c:if>
 				<c:if test="${!empty sessionScope['userLogin-salt'] }">
-					<li>${sessionScope["userLogin-salt"].userLoginId}</li>
+					<li><a href="javascript:void(0);">${sessionScope["userLogin-salt"].userLoginId}</a></li>
 					<li><a href="${pageContext.request.contextPath}/logout.htm">注销</a></li>
 				</c:if>
 			</ul>

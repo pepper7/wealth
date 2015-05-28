@@ -2,6 +2,8 @@ package org.solt.wealth.service;
 
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.solt.wealth.model.UserLogin;
 import org.solt.wealth.persist.IUserLoginDAO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class UserLoginService implements IUserLoginService {
+	private static final Logger logger = LoggerFactory.getLogger(UserLoginService.class);
 
 	@Autowired
 	private IUserLoginDAO dao;
@@ -19,6 +22,7 @@ public class UserLoginService implements IUserLoginService {
 			return dao.getUserLogin(userLogin);
 		} catch (DataAccessException e) {
 			e.printStackTrace();
+			logger.error(e.getMessage());
 			throw new ServiceException("数据库访问异常！");
 		}
 	}
@@ -28,6 +32,7 @@ public class UserLoginService implements IUserLoginService {
 			return dao.findUserLoginByParam(userLogin);
 		} catch (DataAccessException e) {
 			e.printStackTrace();
+			logger.error(e.getMessage());
 			throw new ServiceException("数据库访问异常！");
 		}
 	}
@@ -40,6 +45,7 @@ public class UserLoginService implements IUserLoginService {
 			}
 		} catch (DataAccessException e) {
 			e.printStackTrace();
+			logger.error(e.getMessage());
 			throw new ServiceException("数据库访问异常！");
 		}
 		return flag;
@@ -53,6 +59,7 @@ public class UserLoginService implements IUserLoginService {
 			}
 		} catch (DataAccessException e) {
 			e.printStackTrace();
+			logger.error(e.getMessage());
 			throw new ServiceException("数据库访问异常！");
 		}
 		return flag;
@@ -66,6 +73,7 @@ public class UserLoginService implements IUserLoginService {
 			}
 		} catch (DataAccessException e) {
 			e.printStackTrace();
+			logger.error(e.getMessage());
 			throw new ServiceException("数据库访问异常！");
 		}
 		return flag;
