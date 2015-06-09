@@ -49,31 +49,29 @@ public class HomepageAction {
 	@RequestMapping(value = "userlogin.htm")
 	public ModelAndView login(HttpSession httpSession, HttpServletRequest request,
 			@Valid @ModelAttribute("userLogin") UserLogin userLogin, BindingResult enumsErrors) {
-		logger.debug(">>>HomepageAction.login(userLogin="+userLogin+")");
+		logger.debug(">>>HomepageAction.login(userLogin=" + userLogin + ")");
 		ModelAndView mav = new ModelAndView();
-		if (enumsErrors.hasErrors()) {
-			mav.addObject("userLogin", userLogin);
-			mav.addObject("success", "error");
-			mav.addObject("msg", "数据格式不符合！");
-			mav.setViewName("login");
-		} else {
-			try {
+		try {
+			if (enumsErrors.hasErrors()) {
+				throw new ValidateException("数据格式不符合！");
+			} else {
 				userLogin.setPassword(MD5Util.parseStrToMd5L32(userLogin.getPassword(), userLogin.getUserLoginId()));
-				UserLogin user = service.getUserLogin(userLogin);
-				if (user.getPassword().equals(userLogin.getPassword())) {
-					httpSession.setAttribute("userLogin-salt", userLogin);
-					mav.setViewName("redirect:index.htm");
-				} else {
-					mav.addObject("success", "error");
-					mav.addObject("msg", "账户或密码错误！");
-					mav.setViewName("login");
-				}
-			} catch (ServiceException e) {
-				e.printStackTrace();
-				logger.error(e.getMessage());
-				mav.addObject("title", PAGE_TITLE);
-				mav.setViewName("login");
+				UserLogin user = service.login(userLogin);
+				httpSession.setAttribute("userLogin-salt", user);
+				mav.setViewName("redirect:index.htm");
 			}
+		} catch (ServiceException e) {
+			e.printStackTrace();
+			logger.error(e.getMessage());
+			mav.addObject("userLogin", userLogin);
+			mav.addObject("title", PAGE_TITLE);
+			mav.addObject("success", "error");
+			mav.setViewName("login");
+		} catch (ValidateException e) {
+			mav.addObject("userLogin", userLogin);
+			mav.addObject("title", PAGE_TITLE);
+			mav.addObject("success", "error");
+			mav.setViewName("login");
 		}
 		logger.debug("<<<HomepageAction.login()");
 		return mav;

@@ -10,8 +10,10 @@ import org.solt.wealth.persist.IAccountingBookDAO;
 import org.solt.wealth.persist.IJournalDAO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Transactional
 public class AccountingBookService implements IAccountingBookService {
 
 	@Autowired

@@ -8,6 +8,8 @@ import java.util.Map;
 
 import javax.servlet.http.HttpSession;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.solt.wealth.model.AccountingBook;
 import org.solt.wealth.service.IAccountingBookReportService;
 import org.solt.wealth.service.IAccountingBookService;
@@ -24,6 +26,7 @@ public class AccountingBookAction {
 
 	private final static String PAGE_TITLE = "试验场【账簿】";
 	private final static String PAGE_SUB_MENU = "AccBook";
+	private static final Logger logger = LoggerFactory.getLogger(AccountingBookAction.class);
 
 	@Autowired
 	private IAccountingBookService service;
@@ -88,6 +91,23 @@ public class AccountingBookAction {
 		mav.setViewName("account/editAccBook");
 		return mav;
 	}
+	
+	@RequestMapping(value="uploadaccbookicon.htm")
+	public ModelAndView toUploadAccBookIconPage(AccountingBook accountingBook){
+		ModelAndView mav = new ModelAndView();
+		mav.addObject("title", PAGE_TITLE);
+		try {
+			accountingBook = service.getAccount(accountingBook);
+			mav.addObject("accountingBook", accountingBook);
+			mav.setViewName("account/uploadAccBookIcon");
+		} catch (ServiceException e) {
+			e.printStackTrace();
+			logger.error(e.getMessage());
+			mav.addObject("success", "error");
+			mav.setViewName("account/uploadAccBookIcon");
+		}
+		return mav;
+	}
 
 	// Action
 	@RequestMapping(value = "addaccbook.htm")
@@ -137,7 +157,7 @@ public class AccountingBookAction {
 			e.printStackTrace();
 		}
 		mav.addObject("accbookList", list);
-		if (list.size() == 0) {
+		if (list == null || list.size() == 0) {
 			mav.addObject("success", "info");
 			mav.addObject("msg", "没有找到相关记录");
 		}

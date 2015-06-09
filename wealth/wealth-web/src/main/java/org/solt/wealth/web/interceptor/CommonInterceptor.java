@@ -14,18 +14,18 @@ public class CommonInterceptor extends HandlerInterceptorAdapter {
 
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-		log.info("==============执行顺序: 1、preHandle================");
+		log.debug("preHandle");
 		String requestUri = request.getRequestURI();
 		String contextPath = request.getContextPath();
 		String url = requestUri.substring(contextPath.length());
 
-		log.info("requestUri:" + requestUri);
-		log.info("contextPath:" + contextPath);
-		log.info("url:" + url);
+		log.debug("requestUri:" + requestUri);
+		log.debug("contextPath:" + contextPath);
+		log.debug("url:" + url);
 
 		UserLogin userLogin = (UserLogin) request.getSession().getAttribute("userLogin-salt");
 		if (userLogin == null) {
-			log.info("Interceptor：跳转到login页面！");
+			log.debug("Interceptor：跳转到login页面！");
 			request.getRequestDispatcher("/views/login.jsp").forward(request, response);
 			return false;
 		} else {

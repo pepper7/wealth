@@ -14,6 +14,11 @@
 
 	<dependencies>
 		<dependency>
+			<groupId>org.salt</groupId>
+			<artifactId>common</artifactId>
+			<version>${org.salt.version}</version>
+		</dependency>
+		<dependency>
 			<groupId>org.solt</groupId>
 			<artifactId>wealth-service</artifactId>
 			<version>${project.version}</version>
@@ -48,12 +53,18 @@
 		<dependency>
 			<groupId>commons-io</groupId>
 			<artifactId>commons-io</artifactId>
-			<version>1.4</version>
 		</dependency>
 		<dependency>
 			<groupId>commons-fileupload</groupId>
 			<artifactId>commons-fileupload</artifactId>
-			<version>1.2</version>
+		</dependency>
+		<dependency>
+			<groupId>commons-codec</groupId>
+			<artifactId>commons-codec</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.json</groupId>
+			<artifactId>json</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.hibernate</groupId>
@@ -86,6 +97,11 @@
 			<groupId>javax.activation</groupId>
 			<artifactId>activation</artifactId>
 		</dependency>
+		
+		<dependency>
+				<groupId>com.baidu</groupId>
+				<artifactId>ueditor</artifactId>
+			</dependency>
 
 		<dependency>
 			<groupId>junit</groupId>

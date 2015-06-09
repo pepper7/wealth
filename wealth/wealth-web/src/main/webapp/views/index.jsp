@@ -12,6 +12,7 @@
 		<ul>
 			<li><a href="account/index.htm"><span>账簿试验场</span></a></li>
 			<li><a href="#"><span>理财记录验场</span></a></li>
+			<li><a href="blog/index.htm"><span>博客试验场</span></a></li>
 			<li><a href="#"><span>后台管理</span></a></li>
 		</ul>
 	</div>

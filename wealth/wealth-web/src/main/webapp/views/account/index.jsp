@@ -39,7 +39,8 @@
 					<td>${accbook.accBookName}</td>
 					<td>${accbook.description}</td>
 					<td><a href="editaccbook.htm?accBookId=${accbook.accBookId}" class="btn btn-primary btn-xs"><span class="glyphicon glyphicon-pencil"></span> 编辑</a>
-					<a href="deleteaccbook.htm?accBookId=${accbook.accBookId}" class="btn btn-danger btn-xs"><span class="glyphicon glyphicon-trash"></span> 删除</a></td>
+					<a href="deleteaccbook.htm?accBookId=${accbook.accBookId}" class="btn btn-danger btn-xs"><span class="glyphicon glyphicon-trash"></span> 删除</a>
+					<a href="uploadaccbookicon.htm?accBookId=${accbook.accBookId}" class="btn btn-primary btn-xs"><span class="glyphicon glyphicon-picture"></span> 添加图标</a></td>
 				</tr>
 				</c:forEach>
 			</table>

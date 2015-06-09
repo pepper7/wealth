@@ -12,3 +12,6 @@
 <script type="text/javascript" src="${pageContext.request.contextPath}/images/js/bootstrap-alert.js"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/images/js/bootstrap-datetimepicker.min.js" charset="UTF-8"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/images/js/locales/bootstrap-datetimepicker.zh-CN.js" charset="UTF-8"></script>
+<script type="text/javascript" charset="utf-8" src="${pageContext.request.contextPath}/images/js/ueditor/ueditor.config.js"></script>
+<script type="text/javascript" charset="utf-8" src="${pageContext.request.contextPath}/images/js/ueditor/ueditor.all.min.js"></script>
+<script type="text/javascript" charset="utf-8" src="${pageContext.request.contextPath}/images/js/ueditor/lang/zh-cn/zh-cn.js"></script>

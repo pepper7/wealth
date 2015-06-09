@@ -16,4 +16,5 @@ public interface IUserLoginService {
 
 	public boolean deleteUserLogin(UserLogin userLogin) throws ServiceException;
 
+	public UserLogin login(UserLogin userLogin) throws ServiceException;
 }

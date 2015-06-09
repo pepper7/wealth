@@ -6,6 +6,7 @@
 		<typeAlias type="org.solt.wealth.model.UserLogin" alias="UserLogin"/>
 		<typeAlias type="org.solt.wealth.model.AccountingBook" alias="AccountingBook"/>
 		<typeAlias type="org.solt.wealth.model.Journal" alias="Journal"/>
+		<typeAlias type="org.solt.wealth.model.Blog" alias="Blog"/>
 	</typeAliases>
 	<mappers>
 		<mapper resource="mapper/sqlMap_Enum.map.xml" />
@@ -13,5 +14,6 @@
 		<mapper resource="mapper/sqlMap_AccountingBook.map.xml"/>
 		<mapper resource="mapper/sqlMap_Journal.map.xml"/>
 		<mapper resource="mapper/sqlMap_ReportAcc.map.xml"/>
+		<mapper resource="mapper/sqlMap_Blog.map.xml"/>
 	</mappers>
 </configuration>
