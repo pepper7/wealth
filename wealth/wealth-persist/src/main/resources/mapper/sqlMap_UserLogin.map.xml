@@ -7,11 +7,11 @@
 		<result property="status" column="status"/>
 	</resultMap>
 	
-	<select id="getUserLogin" parameterType="UserLogin" resultMap="userLoginMap">
+	<select id="getByKey" parameterType="UserLogin" resultMap="userLoginMap">
 		select * from user_login where user_Login_Id = #{userLoginId}
 	</select>
 	
-	<select id="findUserLoginByParam" parameterType="UserLogin" resultMap="userLoginMap">
+	<select id="findList" parameterType="UserLogin" resultMap="userLoginMap">
 		select * from user_login 
 			where 1=1
 			<if test="userLoginId != null and userLoginId !=''">
@@ -23,7 +23,7 @@
 		 order by user_Login_Id
 	</select>
 	
-	<select id="countUserLoginByParam">
+	<select id="countList">
 		select count(user_login_id) from user_login where 1=1
 		<if test="userLoginId != null and userLoginId !=''">
 		AND user_Login_Id like '%${userLoginId}%'
@@ -33,7 +33,7 @@
 		</if>
 	</select>
 	
-	<insert id="insertUserLogin" parameterType="UserLogin">
+	<insert id="insert" parameterType="UserLogin">
 		insert user_login(user_Login_Id
 			<if test="password != null and password !=''">,password</if>
 			<if test="status != null and status !=''">,status</if>
@@ -43,7 +43,7 @@
 		)
 	</insert>
 	
-	<update id="updateUserLogin" parameterType="UserLogin">
+	<update id="update" parameterType="UserLogin">
 		update user_login set
 		<if test="password != null and password !=''">
 			password = #{password} 
@@ -54,7 +54,7 @@
 		where user_Login_Id = #{userLoginId}
 	</update>
 	
-	<delete id="deleteUserLogin" parameterType="UserLogin">
+	<delete id="delete" parameterType="UserLogin">
 		delete from user_login where user_Login_Id = #{userLoginId}
 	</delete>
 </mapper>

@@ -4,33 +4,39 @@
 	<resultMap type="AccountingBook" id="accountingBookMap">
 		<id property="accBookId" column="acc_Book_Id" />
 		<result property="accBookName" column="acc_Booking_Name" />
-		<result property="description" column="description"/>
+		<result property="description" column="description" />
 	</resultMap>
-	
-	<select id="getAccountingBook" parameterType="AccountingBook" resultMap="accountingBookMap">
-		select * from fin_accounting_book where acc_book_id = #{accBookId}
+
+	<select id="getByKey" parameterType="AccountingBook" resultMap="accountingBookMap">
+		select * from
+		fin_accounting_book where acc_book_id = #{accBookId}
 	</select>
-	
-	<select id="findAccountingBookByParam" parameterType="AccountingBook" resultMap="accountingBookMap">
+
+	<select id="findList" parameterType="AccountingBook" resultMap="accountingBookMap">
 		select * from fin_accounting_book where 1=1
-			<if test="accBookName != null and accBookName != ''">
+		<if test="accBookName != null and accBookName != ''">
 			AND acc_Booking_Name like '%${accBookName}%'
-			</if>
+		</if>
 		order by acc_book_id
 	</select>
-	
-	<insert id="insertAccountingBook" parameterType="AccountingBook">
-		insert fin_accounting_book(acc_Booking_Name<if test="description != null and description !=''">,description</if>) 
-		values(#{accBookName}<if test="description != null and description !=''">,#{description}</if>)
+
+	<insert id="insert" parameterType="AccountingBook">
+		insert fin_accounting_book(acc_Booking_Name
+		<if test="description != null and description !=''">,description</if>
+		)
+		values(#{accBookName}
+		<if test="description != null and description !=''">,#{description}</if>
+		)
 	</insert>
-	
-	<update id="updateAccountingBook" parameterType="AccountingBook">
+
+	<update id="update" parameterType="AccountingBook">
 		update fin_accounting_book set acc_Booking_Name = #{accBookName}
 		<if test="description != null and description !=''">, description = #{description} </if>
 		where acc_book_id = #{accBookId}
 	</update>
-	
-	<delete id="deleteAccountingBook" parameterType="AccountingBook">
-		delete from fin_accounting_book where acc_book_id = #{accBookId}
+
+	<delete id="delete" parameterType="AccountingBook">
+		delete from fin_accounting_book where acc_book_id =
+		#{accBookId}
 	</delete>
 </mapper>

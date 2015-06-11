@@ -19,11 +19,11 @@
 		<result property="amount" column="amount" javaType="Double" jdbcType="DECIMAL"/>
 	</resultMap>
 	
-	<select id="getJournal" parameterType="Journal" resultMap="journalMap">
+	<select id="getByKey" parameterType="Journal" resultMap="journalMap">
 		select * from fin_journal where journal_Id = #{journalId}
 	</select>
 	
-	<select id="findJournal" parameterType="Journal" resultMap="journalMap">
+	<select id="findList" parameterType="Journal" resultMap="journalMap">
 		select * from fin_journal 
 			where 1=1
 			<if test="accBookId != null">
@@ -35,7 +35,27 @@
 		 order by journal_date desc
 	</select>
 	
-	<insert id="insertJournal" parameterType="Journal">
+	<select id="findListByParam" parameterType="Map" resultMap="journalMap">
+		select * from fin_journal 
+			where 1=1
+			<if test="accBookId != null">
+			AND acc_Book_Id = #{accBookId}
+			</if>
+			<if test="month != null">
+			AND date_format(journal_date,'%Y-%m') = #{month}
+			</if>
+			<if test="mainCategory != null">
+			AND main_Category = #{mainCategory}
+			</if>
+			<if test="orderList != null">
+			order by ${orderList},journal_id
+			</if>
+			<if test="orderList == null">
+			order by journal_date desc, journal_id
+			</if>
+	</select>
+	
+	<insert id="insert" parameterType="Journal">
 		insert fin_journal(acc_Book_Id,journal_item,journal_date,quantity,unit_Price,amount
 			<if test="description != null and description != ''">,description</if>
 			<if test="specification != null and specification != ''">,specification</if> 
@@ -61,7 +81,7 @@
 		)
 	</insert>
 	
-	<update id="updateJournal" parameterType="Journal">
+	<update id="update" parameterType="Journal">
 		update fin_journal set 
 		journal_item = #{item},journal_date = #{journalDate},quantity = #{quantity},unit_Price = #{unitPrice},amount = #{amount} 
 		<if test="description != null and description != ''">,description = #{description}</if>
@@ -77,31 +97,11 @@
 		where journal_Id = #{journalId}
 	</update>
 	
-	<delete id="deleteJournal" parameterType="Journal">
+	<delete id="delete" parameterType="Journal">
 		delete from fin_journal where journal_Id = #{journalId}
 	</delete>
 	
 	<!-- others -->
-	<select id="findJournalByParam" parameterType="Map" resultMap="journalMap">
-		select * from fin_journal 
-			where 1=1
-			<if test="accBookId != null">
-			AND acc_Book_Id = #{accBookId}
-			</if>
-			<if test="month != null">
-			AND date_format(journal_date,'%Y-%m') = #{month}
-			</if>
-			<if test="mainCategory != null">
-			AND main_Category = #{mainCategory}
-			</if>
-			<if test="orderList != null">
-			order by ${orderList},journal_id
-			</if>
-			<if test="orderList == null">
-			order by journal_date desc, journal_id
-			</if>
-	</select>
-	
 	<select id="getTotalJournal" parameterType="Map" resultType="Double">
 		select sum(amount) as total from fin_journal 
 			where 1=1

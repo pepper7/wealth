@@ -7,11 +7,11 @@
 		<result property="content" column="content" jdbcType="CLOB"/>
 	</resultMap>
 	
-	<select id="getBlog" parameterType="Blog" resultMap="blogMap">
+	<select id="getByKey" parameterType="Blog" resultMap="blogMap">
 		select * from blog where blog_Id = #{blogId}
 	</select>
 	
-	<select id="findBlogByParam" parameterType="Blog" resultMap="blogMap">
+	<select id="findList" parameterType="Blog" resultMap="blogMap">
 		select * from blog 
 			where 1=1
 			<if test="title != null and title !=''">
@@ -23,7 +23,7 @@
 		 order by blog_Id
 	</select>
 	
-	<select id="countBlogByParam">
+	<select id="countList">
 		select count(blog_id) from blog where 1=1
 		<if test="title != null and title !=''">
 		AND title like '%${title}%'
@@ -33,13 +33,13 @@
 		</if>
 	</select>
 	
-	<insert id="insertBlog" parameterType="Blog">
+	<insert id="insert" parameterType="Blog">
 		insert blog(blog_Id,title,content
 		)values(#{blogId},#{title},#{content}
 		)
 	</insert>
 	
-	<update id="updateBlog" parameterType="Blog">
+	<update id="update" parameterType="Blog">
 		update blog set title = #{title}
 		<if test="content != null and content !=''">
 			,content = #{content} 
@@ -47,7 +47,7 @@
 		where blog_Id = #{blogId}
 	</update>
 	
-	<delete id="deleteBlog" parameterType="Blog">
+	<delete id="delete" parameterType="Blog">
 		delete from blog where blog_Id = #{blogId}
 	</delete>
 </mapper>

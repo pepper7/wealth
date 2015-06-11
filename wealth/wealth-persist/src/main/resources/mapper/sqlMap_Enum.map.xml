@@ -3,83 +3,84 @@
 <mapper namespace="org.solt.wealth.model.common.Enums">
 	<resultMap type="Enums" id="enumsMap">
 		<id property="enumId" column="enum_Id" />
-		<result property="enumType" column="enum_Type"/>
-		<result property="enumName" column="enum_Name"/>
-		<result property="description" column="description"/>
-		<result property="parentEnumId" column="parent_Enum_Id"/>
+		<result property="enumType" column="enum_Type" />
+		<result property="enumName" column="enum_Name" />
+		<result property="description" column="description" />
+		<result property="parentEnumId" column="parent_Enum_Id" />
 	</resultMap>
-	
-	<select id="getEnums" parameterType="Enums" resultMap="enumsMap">
-		select * from enumerates where enum_Id = #{enumId}
+
+	<select id="getByKey" parameterType="Enums" resultMap="enumsMap">
+		select * from enumerates where enum_Id
+		= #{enumId}
 	</select>
-	
-	<select id="findEnumsByParam" parameterType="Enums" resultMap="enumsMap">
-		select * from enumerates 
-			where 1=1
-			<if test="enumId != null and enumId !=''">
+
+	<select id="findList" parameterType="Enums" resultMap="enumsMap">
+		select * from enumerates
+		where 1=1
+		<if test="enumId != null and enumId !=''">
 			AND enum_Id = #{enumId}
-			</if>
-			<if test="enumName != null">
+		</if>
+		<if test="enumName != null">
 			AND enum_Name like '%${enumName}%'
-			</if>
-			<if test="enumType != null and enumType !=''">
+		</if>
+		<if test="enumType != null and enumType !=''">
 			AND enum_Type = #{enumType}
-			</if>
-			<if test="parentEnumId != null and parentEnumId !=''">
+		</if>
+		<if test="parentEnumId != null and parentEnumId !=''">
 			AND parent_Enum_Id = #{parentEnumId}
-			</if>
-		 order by enum_Id
+		</if>
+		order by enum_Id
 	</select>
-	
+
 	<select id="findEnumsByParamForLayer" parameterType="Enums" resultMap="enumsMap">
-		select * from enumerates 
-			where 1=1
-			<if test="enumId != null and enumId !=''">
+		select * from enumerates
+		where 1=1
+		<if test="enumId != null and enumId !=''">
 			AND enum_Id = #{enumId}
-			</if>
-			<if test="enumName != null">
+		</if>
+		<if test="enumName != null">
 			AND enum_Name like '%${enumName}%'
-			</if>
-			<if test="enumType != null and enumType !=''">
+		</if>
+		<if test="enumType != null and enumType !=''">
 			AND enum_Type = #{enumType}
-			</if>
-			<if test="parentEnumId == null || parentEnumId ==''">
+		</if>
+		<if test="parentEnumId == null || parentEnumId ==''">
 			AND parent_Enum_Id is null
-			</if>
-			<if test="parentEnumId != null and parentEnumId !=''">
+		</if>
+		<if test="parentEnumId != null and parentEnumId !=''">
 			AND parent_Enum_Id = #{parentEnumId}
-			</if>
-		 order by enum_Id
+		</if>
+		order by enum_Id
 	</select>
-	
-	<insert id="insertEnums" parameterType="Enums">
+
+	<insert id="insert" parameterType="Enums">
 		insert enumerates(enum_Id,enum_Type,enum_Name
-			<if test="description != null and description !=''">,description</if>
-			<if test="parentEnumId != null and parentEnumId !=''">,parent_Enum_Id</if>
+		<if test="description != null and description !=''">,description</if>
+		<if test="parentEnumId != null and parentEnumId !=''">,parent_Enum_Id</if>
 		)values(#{enumId},#{enumType},#{enumName}
-			<if test="description != null and description !=''">,#{description}</if>
-			<if test="parentEnumId != null and parentEnumId !=''">,#{parentEnumId}</if>
+		<if test="description != null and description !=''">,#{description}</if>
+		<if test="parentEnumId != null and parentEnumId !=''">,#{parentEnumId}</if>
 		)
 	</insert>
-	
-	<update id="updateEnums" parameterType="Enums">
+
+	<update id="update" parameterType="Enums">
 		update enumerates set
 		<if test="enumName != null and enumName !=''">
-			enum_Name = #{enumName} 
+			enum_Name = #{enumName}
 		</if>
 		<if test="parentEnumId == null || parentEnumId ==''">
 			,parent_Enum_Id = null
 		</if>
 		<if test="parentEnumId != null and parentEnumId !=''">
-			,parent_Enum_Id = #{parentEnumId} 
+			,parent_Enum_Id = #{parentEnumId}
 		</if>
 		<if test="description != null and description !=''">
-			,description = #{description} 
+			,description = #{description}
 		</if>
 		where enum_Id = #{enumId}
 	</update>
-	
-	<delete id="deleteEnums" parameterType="Enums">
+
+	<delete id="delete" parameterType="Enums">
 		delete from enumerates where enum_Id = #{enumId}
 	</delete>
 </mapper>
