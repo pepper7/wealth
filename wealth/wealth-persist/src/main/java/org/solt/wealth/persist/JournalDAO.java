@@ -15,6 +15,10 @@ public class JournalDAO extends CommonDAO<Journal> {
 
 	private final Logger logger = Logger.getLogger(JournalDAO.class);
 
+	public JournalDAO() {
+		super(Journal.class);
+	}
+
 	public Double getTotalJournal(Map<String, Object> params) throws DataAccessException {
 		logger.debug(">>>JournalDAO.getTotalJournal(params=" + params + ")");
 		return sqlSession.selectOne("org.solt.wealth.model.Journal.getTotalJournal", params);

@@ -9,6 +9,10 @@ import org.springframework.stereotype.Repository;
  * @author solt
  */
 @Repository
-public class UserLoginDAO extends CommonDAO<UserLogin>{
+public class UserLoginDAO extends CommonDAO<UserLogin> {
+
+	public UserLoginDAO() {
+		super(UserLogin.class);
+	}
 
 }

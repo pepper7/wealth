@@ -66,11 +66,13 @@ public class HomepageAction {
 			mav.addObject("userLogin", userLogin);
 			mav.addObject("title", PAGE_TITLE);
 			mav.addObject("success", "error");
+			mav.addObject("msg", e.getMessage());
 			mav.setViewName("login");
 		} catch (ValidateException e) {
 			mav.addObject("userLogin", userLogin);
 			mav.addObject("title", PAGE_TITLE);
 			mav.addObject("success", "error");
+			mav.addObject("msg", e.getMessage());
 			mav.setViewName("login");
 		}
 		logger.debug("<<<HomepageAction.login()");

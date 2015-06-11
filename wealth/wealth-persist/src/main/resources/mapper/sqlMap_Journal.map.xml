@@ -19,7 +19,7 @@
 		<result property="amount" column="amount" javaType="Double" jdbcType="DECIMAL"/>
 	</resultMap>
 	
-	<select id="getByKey" parameterType="Journal" resultMap="journalMap">
+	<select id="findByKey" parameterType="Journal" resultMap="journalMap">
 		select * from fin_journal where journal_Id = #{journalId}
 	</select>
 	

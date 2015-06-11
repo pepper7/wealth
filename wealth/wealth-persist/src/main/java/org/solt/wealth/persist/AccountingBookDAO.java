@@ -7,4 +7,8 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class AccountingBookDAO extends CommonDAO<AccountingBook> {
 
+	public AccountingBookDAO() {
+		super(AccountingBook.class);
+	}
+
 }

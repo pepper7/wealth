@@ -89,7 +89,7 @@ public class UserLoginService implements IUserLoginService {
 		UserLogin user = null;
 		try {
 			user = dao.findByKey(userLogin);
-			if (!user.getPassword().equals(userLogin.getPassword())) {
+			if (null == user || !user.getPassword().equals(userLogin.getPassword())) {
 				throw new ServiceException("账户或密码错误！");
 			}
 		} catch (DataAccessException e) {

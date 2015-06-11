@@ -7,7 +7,7 @@
 		<result property="status" column="status"/>
 	</resultMap>
 	
-	<select id="getByKey" parameterType="UserLogin" resultMap="userLoginMap">
+	<select id="findByKey" parameterType="UserLogin" resultMap="userLoginMap">
 		select * from user_login where user_Login_Id = #{userLoginId}
 	</select>
 	

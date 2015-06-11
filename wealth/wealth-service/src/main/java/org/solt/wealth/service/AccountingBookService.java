@@ -97,7 +97,7 @@ public class AccountingBookService implements IAccountingBookService {
 
 	public List<Journal> findJournal(Map<String, Object> params) throws ServiceException {
 		try {
-			return journalDao.findList(new Journal(), params);
+			return journalDao.findList(params);
 		} catch (DataAccessException e) {
 			e.printStackTrace();
 			throw new ServiceException("数据库访问异常！");

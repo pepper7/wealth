@@ -189,12 +189,11 @@ public class JournalAction {
 	@RequestMapping(value = "deletejournal.htm")
 	public ModelAndView deleteJournal(Journal journal) {
 		ModelAndView mav = new ModelAndView();
-		mav.addObject("title", PAGE_TITLE);
-		mav.addObject("navMenu", PAGE_SUB_MENU);
-		mav.setViewName("redirect:/account/jounral.htm");
 		try {
 			service.deleteJournal(journal);
+			mav.setViewName("redirect:/account/journal.htm");
 		} catch (ServiceException e) {
+			mav.setViewName("redirect:/account/journal.htm");
 		}
 		return mav;
 	}

@@ -9,6 +9,10 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class EnumDAO extends CommonDAO<Enums> {
 
+	public EnumDAO() {
+		super(Enums.class);
+	}
+
 	/**
 	 * @see IEnumDAO.findEnumsByParamForLayer
 	 */

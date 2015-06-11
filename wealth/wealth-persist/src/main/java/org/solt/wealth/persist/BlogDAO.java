@@ -10,5 +10,7 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public class BlogDAO extends CommonDAO<Blog> {
-	
+	public BlogDAO() {
+		super(Blog.class);
+	}
 }

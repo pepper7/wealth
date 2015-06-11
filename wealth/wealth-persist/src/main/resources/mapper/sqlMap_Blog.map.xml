@@ -7,7 +7,7 @@
 		<result property="content" column="content" jdbcType="CLOB"/>
 	</resultMap>
 	
-	<select id="getByKey" parameterType="Blog" resultMap="blogMap">
+	<select id="findByKey" parameterType="Blog" resultMap="blogMap">
 		select * from blog where blog_Id = #{blogId}
 	</select>
 	

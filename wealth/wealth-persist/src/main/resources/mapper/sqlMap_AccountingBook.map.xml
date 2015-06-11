@@ -7,7 +7,7 @@
 		<result property="description" column="description" />
 	</resultMap>
 
-	<select id="getByKey" parameterType="AccountingBook" resultMap="accountingBookMap">
+	<select id="fingByKey" parameterType="AccountingBook" resultMap="accountingBookMap">
 		select * from
 		fin_accounting_book where acc_book_id = #{accBookId}
 	</select>

@@ -9,7 +9,7 @@
 		<result property="parentEnumId" column="parent_Enum_Id" />
 	</resultMap>
 
-	<select id="getByKey" parameterType="Enums" resultMap="enumsMap">
+	<select id="findByKey" parameterType="Enums" resultMap="enumsMap">
 		select * from enumerates where enum_Id
 		= #{enumId}
 	</select>

@@ -23,43 +23,50 @@ public abstract class CommonDAO<T> {
 	@Autowired
 	protected SqlSessionTemplate sqlSession;
 
+	private final Class<T> clazz;
+
+	public CommonDAO(Class<T> clazz) {
+		this.clazz = clazz;
+		logger.debug(clazz);
+	}
+
 	public T findByKey(T model) throws DataAccessException {
 		logger.debug(">>>" + this.getClass().getPackage() + ".CommonDAO.findByKey(" + model + ")");
-		return sqlSession.selectOne(model.getClass().getName() + ".findByKey", model);
+		return sqlSession.selectOne(clazz.getName() + ".findByKey", model);
 	}
 
 	public List<T> findList(T model) throws DataAccessException {
 		logger.debug(">>>" + this.getClass().getPackage() + ".CommonDAO.findList(" + model + ")");
-		return sqlSession.selectList(model.getClass().getName() + ".findList", model);
+		return sqlSession.selectList(clazz.getName() + ".findList", model);
 	}
 
-	public List<T> findList(T model, Map<String, Object> params) throws DataAccessException {
-		logger.debug(">>>" + this.getClass().getPackage() + ".CommonDAO.findList(" + model + "," + params + ")");
-		return sqlSession.selectList(model.getClass().getName() + ".findListByParam", params);
+	public List<T> findList(Map<String, Object> params) throws DataAccessException {
+		logger.debug(">>>" + this.getClass().getPackage() + ".CommonDAO.findList(" + params + ")");
+		return sqlSession.selectList(clazz.getName() + ".findListByParam", params);
 	}
 
 	public long countList(T model) throws DataAccessException {
 		logger.debug(">>>" + this.getClass().getPackage() + ".CommonDAO.countList(" + model + ")");
-		return sqlSession.selectOne(model.getClass().getName() + ".countList", model);
+		return sqlSession.selectOne(clazz.getName() + ".countList", model);
 	}
 
-	public long countList(T model, Map<String, Object> params) throws DataAccessException {
-		logger.debug(">>>" + this.getClass().getPackage() + ".CommonDAO.countList(" + model + "," + params + ")");
-		return sqlSession.selectOne(model.getClass().getName() + ".countListByParam", params);
+	public long countList(Map<String, Object> params) throws DataAccessException {
+		logger.debug(">>>" + this.getClass().getPackage() + ".CommonDAO.countList(" + params + ")");
+		return sqlSession.selectOne(clazz.getName() + ".countListByParam", params);
 	}
 
 	public int insert(T model) throws DataAccessException {
 		logger.debug(">>>" + this.getClass().getPackage() + ".CommonDAO.insert(" + model + ")");
-		return sqlSession.insert(model.getClass().getName() + ".insert", model);
+		return sqlSession.insert(clazz.getName() + ".insert", model);
 	}
 
 	public int update(T model) throws DataAccessException {
 		logger.debug(">>>" + this.getClass().getPackage() + ".CommonDAO.update(" + model + ")");
-		return sqlSession.update(model.getClass().getName() + ".update", model);
+		return sqlSession.update(clazz.getName() + ".update", model);
 	}
 
 	public int delete(T model) throws DataAccessException {
 		logger.debug(">>>" + this.getClass().getPackage() + ".CommonDAO.delete(" + model + ")");
-		return sqlSession.delete(model.getClass().getName() + ".delete", model);
+		return sqlSession.delete(clazz.getName() + ".delete", model);
 	}
 }
