@@ -31,8 +31,8 @@
 		</if>
 		order by enum_Id
 	</select>
-
-	<select id="findEnumsByParamForLayer" parameterType="Enums" resultMap="enumsMap">
+	
+	<select id="findListByParamPage" resultMap="enumsMap">
 		select * from enumerates
 		where 1=1
 		<if test="enumId != null and enumId !=''">
@@ -44,15 +44,44 @@
 		<if test="enumType != null and enumType !=''">
 			AND enum_Type = #{enumType}
 		</if>
-		<if test="parentEnumId == null || parentEnumId ==''">
-			AND parent_Enum_Id is null
+		<if test="parentEnumId != null and parentEnumId !=''">
+			AND parent_Enum_Id = #{parentEnumId}
+		</if>
+		order by enum_Id limit #{start},#{pageSize}
+	</select>
+
+	<select id="countList" resultType="java.lang.Long">
+		select count(enum_Id) from enumerates where 1=1
+		<if test="enumId != null and enumId !=''">
+			AND enum_Id = #{enumId}
+		</if>
+		<if test="enumName != null">
+			AND enum_Name like '%${enumName}%'
+		</if>
+		<if test="enumType != null and enumType !=''">
+			AND enum_Type = #{enumType}
 		</if>
 		<if test="parentEnumId != null and parentEnumId !=''">
 			AND parent_Enum_Id = #{parentEnumId}
 		</if>
-		order by enum_Id
 	</select>
-
+	
+	<select id="countListByParam" resultType="java.lang.Long">
+		select count(enum_Id) from enumerates where 1=1
+		<if test="enumId != null and enumId !=''">
+			AND enum_Id = #{enumId}
+		</if>
+		<if test="enumName != null">
+			AND enum_Name like '%${enumName}%'
+		</if>
+		<if test="enumType != null and enumType !=''">
+			AND enum_Type = #{enumType}
+		</if>
+		<if test="parentEnumId != null and parentEnumId !=''">
+			AND parent_Enum_Id = #{parentEnumId}
+		</if>
+	</select>
+	
 	<insert id="insert" parameterType="Enums">
 		insert enumerates(enum_Id,enum_Type,enum_Name
 		<if test="description != null and description !=''">,description</if>
@@ -83,4 +112,25 @@
 	<delete id="delete" parameterType="Enums">
 		delete from enumerates where enum_Id = #{enumId}
 	</delete>
+	
+	<select id="findEnumsByParamForLayer" parameterType="Enums" resultMap="enumsMap">
+		select * from enumerates
+		where 1=1
+		<if test="enumId != null and enumId !=''">
+			AND enum_Id = #{enumId}
+		</if>
+		<if test="enumName != null">
+			AND enum_Name like '%${enumName}%'
+		</if>
+		<if test="enumType != null and enumType !=''">
+			AND enum_Type = #{enumType}
+		</if>
+		<if test="parentEnumId == null || parentEnumId ==''">
+			AND parent_Enum_Id is null
+		</if>
+		<if test="parentEnumId != null and parentEnumId !=''">
+			AND parent_Enum_Id = #{parentEnumId}
+		</if>
+		order by enum_Id
+	</select>
 </mapper>

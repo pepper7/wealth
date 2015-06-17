@@ -1,14 +1,14 @@
 package org.solt.wealth.model.common;
 
-
 import java.io.Serializable;
 import java.sql.Timestamp;
+import java.util.Map;
+
 /**
  * 抽象通用实体类
  * @author yasin
- *
  */
-public abstract class CommonEntity implements Serializable{
+public abstract class CommonEntity implements Serializable {
 
 	/**
 	 * 
@@ -49,6 +49,10 @@ public abstract class CommonEntity implements Serializable{
 
 	public void setLastUpdatedBy(Long lastUpdatedBy) {
 		this.lastUpdatedBy = lastUpdatedBy;
+	}
+
+	public Map<String, Object> toMap() {
+		return null;
 	}
 
 }

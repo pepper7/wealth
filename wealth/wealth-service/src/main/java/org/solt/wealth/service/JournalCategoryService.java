@@ -1,8 +1,10 @@
 package org.solt.wealth.service;
 
 import java.util.List;
+import java.util.Map;
 
 import org.solt.wealth.model.common.Enums;
+import org.solt.wealth.model.common.Page;
 import org.solt.wealth.persist.common.EnumDAO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
@@ -70,6 +72,16 @@ public class JournalCategoryService implements IJournalCategoryService {
 		enums.setEnumType("CONSUMPTION_TYPE");
 		try {
 			return enumDao.findEnumsByParamForLayer(enums);
+		} catch (DataAccessException e) {
+			e.printStackTrace();
+			throw new ServiceException("数据库访问异常！");
+		}
+	}
+
+	public Page<Enums> findJournalCategoryPage(Map<String, Object> params, Page<Enums> page) throws ServiceException {
+		try {
+			params.put("enumType", "CONSUMPTION_TYPE");
+			return enumDao.findList(params, page);
 		} catch (DataAccessException e) {
 			e.printStackTrace();
 			throw new ServiceException("数据库访问异常！");

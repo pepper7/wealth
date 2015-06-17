@@ -1,5 +1,8 @@
 package org.solt.wealth.model.common;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotEmpty;
 
@@ -93,6 +96,16 @@ public class Enums extends CommonEntity {
 		} else if (!enumType.equals(other.enumType))
 			return false;
 		return true;
+	}
+
+	public Map<String, Object> toMap() {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("enumId", enumId);
+		map.put("enumType", enumType);
+		map.put("enumName", enumName);
+		map.put("description", description);
+		map.put("parentEnumId", parentEnumId);
+		return map;
 	}
 
 }

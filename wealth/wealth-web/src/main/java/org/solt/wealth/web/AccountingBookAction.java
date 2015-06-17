@@ -101,7 +101,6 @@ public class AccountingBookAction {
 			mav.addObject("accountingBook", accountingBook);
 			mav.setViewName("account/uploadAccBookIcon");
 		} catch (ServiceException e) {
-			e.printStackTrace();
 			logger.error(e.getMessage());
 			mav.addObject("success", "error");
 			mav.setViewName("account/uploadAccBookIcon");

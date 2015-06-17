@@ -22,6 +22,8 @@
 	<div style="text-align:left;width:1024px;">
 	<p><a href="newcategory.htm" class="btn btn-default btn-sm"><span class="glyphicon glyphicon-plus"></span> 创建分类</a></p>
 	<form action="searchcategory.htm" name="searchCategoryForm" method="post" class="form-inline">
+		<input type="hidden" name="pageIndex" value=""/>
+		<input type="hidden" name="pageSize" value="20"/>
 		<div class="form-group">
 		<label for="enumId">分类编号：</label>
 		</div>
@@ -36,11 +38,11 @@
 		</div>
 		<button class="btn btn-primary btn-sm" type="submit"><span class="glyphicon glyphicon-search"></span> 查询</button>
 	</form>
-		
-		<c:if test="${!empty journalCategoryList}">
+		<c:if test="${!empty journalCategoryPage }">
+		<c:if test="${!empty journalCategoryPage.itemList}">
 			<table class="table table-striped table-bordered">
 				<thead><tr><td>序号</td><td>分类编号</td><td>分类名称</td><td>序列</td><td>说明</td><td>操作</td></tr></thead>
-			<c:forEach items="${journalCategoryList}" var="category" varStatus="status">
+			<c:forEach items="${journalCategoryPage.itemList}" var="category" varStatus="status">
 			<tr><td>${status.index + 1}</td>
 				<td>${category.enumId}</td>
 				<td>${category.enumName}</td>
@@ -51,9 +53,39 @@
 			</tr>
 			</c:forEach>
 			</table>
+			<ul class="pagination">
+			<c:if test="${journalCategoryPage.pageIndex <2 }">
+				<li class="disabled"><a href="javascript:void(0)">&laquo;</a></li>
+			</c:if>
+			<c:if test="${journalCategoryPage.pageIndex >1 }">
+				<li><a href="javascript:page(${journalCategoryPage.pageIndex-1})">&laquo;</a></li>
+			</c:if>
+			<c:forEach begin="1" end="${journalCategoryPage.totalPages}" var="index">
+				<li <c:if test="${index == journalCategoryPage.pageIndex }">class="active"</c:if>>
+				<a href="javascript:page(${index})">${index}</a>
+				</li>
+			</c:forEach>
+			<c:if test="${journalCategoryPage.pageIndex < journalCategoryPage.totalPages}">
+				<li><a href="javascript:page(${journalCategoryPage.pageIndex+1})">&raquo;</a></li>
+			</c:if>
+			<c:if test="${journalCategoryPage.pageIndex == journalCategoryPage.totalPages}">
+				<li class="disabled"><a href="javascript:void(0)">&raquo;</a></li>
+			</c:if>
+			
+			</ul>
+		</c:if>
 		</c:if>
 	</div>
 </div>
 <jsp:include page="../footer.jsp"/>
 </body>
+<script>
+function page(index){
+	var form = $("form[name=searchCategoryForm]");
+	if(form){
+		$(form).find(":hidden[name=pageIndex]").val(index);
+		$(form).submit();
+	}
+}
+</script>
 </html>

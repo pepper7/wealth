@@ -7,9 +7,8 @@
 		<result property="description" column="description" />
 	</resultMap>
 
-	<select id="fingByKey" parameterType="AccountingBook" resultMap="accountingBookMap">
-		select * from
-		fin_accounting_book where acc_book_id = #{accBookId}
+	<select id="findByKey" parameterType="AccountingBook" resultMap="accountingBookMap">
+		select * from fin_accounting_book where acc_book_id = #{accBookId}
 	</select>
 
 	<select id="findList" parameterType="AccountingBook" resultMap="accountingBookMap">

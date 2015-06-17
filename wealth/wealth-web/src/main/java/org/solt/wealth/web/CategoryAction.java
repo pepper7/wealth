@@ -1,10 +1,9 @@
 package org.solt.wealth.web;
 
-import java.util.List;
-
 import javax.validation.Valid;
 
 import org.solt.wealth.model.common.Enums;
+import org.solt.wealth.model.common.Page;
 import org.solt.wealth.service.IJournalCategoryService;
 import org.solt.wealth.service.ServiceException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +11,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -42,7 +42,7 @@ public class CategoryAction {
 		mav.setViewName("account/addCategory");
 		return mav;
 	}
-	
+
 	@RequestMapping(value = "editcategory.htm")
 	public ModelAndView toEditCategoryPage(Enums enums) {
 		ModelAndView mav = new ModelAndView();
@@ -60,19 +60,30 @@ public class CategoryAction {
 
 	// Action
 	@RequestMapping(value = "searchcategory.htm")
-	public ModelAndView searchCategory(Enums enums) {
+	public ModelAndView searchCategory(Enums enums,
+			@RequestParam(value = "pageIndex", required = false) Integer pageIndex,
+			@RequestParam(value = "pageSize", required = false) Integer pageSize) {
 		ModelAndView mav = new ModelAndView();
-		List<Enums> list = null;
 		mav.addObject("title", PAGE_TITLE);
 		mav.addObject("navMenu", PAGE_SUB_MENU);
+		if (pageIndex == null || pageIndex < 1) {
+			pageIndex = 1;
+		}
+		if (pageSize == null || pageSize < 1) {
+			pageSize = 20;
+		}
+		Page<Enums> page = new Page<Enums>();
+		page.setPageIndex(pageIndex);
+		page.setPageSize(pageSize);
+
 		try {
-			list = service.findJournalCategory(enums);
+			page = service.findJournalCategoryPage(enums.toMap(), page);
 		} catch (ServiceException e) {
 			e.printStackTrace();
 		}
-		mav.addObject("journalCategoryList", list);
+		mav.addObject("journalCategoryPage", page);
 		mav.addObject("param", enums);
-		if (list.size() == 0) {
+		if (page.getItemList().size() == 0) {
 			mav.addObject("success", "info");
 			mav.addObject("msg", "没有找到相关记录");
 		}
@@ -111,9 +122,10 @@ public class CategoryAction {
 		}
 		return mav;
 	}
-	
+
 	@RequestMapping(value = "savecategory.htm")
-	public ModelAndView saveCategory(@Valid @ModelAttribute("category") Enums enums, BindingResult enumsErrors, RedirectAttributes modelMap) {
+	public ModelAndView saveCategory(@Valid @ModelAttribute("category") Enums enums, BindingResult enumsErrors,
+			RedirectAttributes modelMap) {
 		ModelAndView mav = new ModelAndView();
 		mav.addObject("title", PAGE_TITLE);
 		mav.addObject("navMenu", PAGE_SUB_MENU);
@@ -153,7 +165,7 @@ public class CategoryAction {
 			service.deleteJournalCategory(enums);
 			modelMap.addFlashAttribute("success", "success");
 			modelMap.addFlashAttribute("msg", "删除成功！");
-		}catch(ServiceException e){
+		} catch (ServiceException e) {
 			modelMap.addFlashAttribute("success", "error");
 			modelMap.addFlashAttribute("msg", e.getMessage());
 		}

@@ -13,9 +13,6 @@ public class EnumDAO extends CommonDAO<Enums> {
 		super(Enums.class);
 	}
 
-	/**
-	 * @see IEnumDAO.findEnumsByParamForLayer
-	 */
 	public List<Enums> findEnumsByParamForLayer(Enums enums) throws DataAccessException {
 		return sqlSession.selectList("org.solt.wealth.model.common.Enums.findEnumsByParamForLayer", enums);
 	}

@@ -23,7 +23,7 @@
 		 order by user_Login_Id
 	</select>
 	
-	<select id="countList">
+	<select id="countList" resultType="java.lang.Long">
 		select count(user_login_id) from user_login where 1=1
 		<if test="userLoginId != null and userLoginId !=''">
 		AND user_Login_Id like '%${userLoginId}%'
