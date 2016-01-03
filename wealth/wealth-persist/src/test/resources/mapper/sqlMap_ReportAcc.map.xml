@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.solt.wealth.model.ReportAcc">
+	<resultMap type="org.solt.wealth.model.view.JournalView" id="journalViewMap">
+		<id property="journalId" column="journal_Id" />
+		<result property="topCategory" column="top_Category"/>
+		<result property="mainCategory" column="main_Category"/>
+		<result property="subCategory" column="sub_Category"/>
+		<result property="journalDate" column="journal_date" javaType="java.sql.Date"/>
+		<result property="quantity" column="quantity" javaType="Double" jdbcType="DECIMAL"/>
+		<result property="unitPrice" column="unit_Price" javaType="Double" jdbcType="DECIMAL"/>
+		<result property="discountPrice" column="discount_Price" javaType="Double" jdbcType="DECIMAL"/>
+		<result property="uom" column="uom"/>
+		<result property="address" column="address"/>
+		<result property="specification" column="specification"/>
+		<result property="item" column="journal_item" />
+		<result property="description" column="description"/>
+		<result property="accBookId" column="acc_Book_Id" javaType="Integer"/>
+		<result property="amount" column="amount" javaType="Double" jdbcType="DECIMAL"/>
+		<result property="dailyCount" column="daily_Count" javaType="Integer"/>
+	</resultMap>
+
+	<select id="findJournalViewByParam" parameterType="Map" resultMap="journalViewMap">
+		select *,
+			(select count(journal_id) from fin_journal  where journal_date = j.journal_date and acc_book_id = j.acc_book_id) as daily_Count 
+		from fin_journal j
+			where 1=1
+			<if test="accBookId != null">
+			AND j.acc_Book_Id = #{accBookId}
+			</if>
+			<if test="month != null">
+			AND date_format(j.journal_date,'%Y-%m') = #{month}
+			</if>
+			<if test="mainCategory != null">
+			AND j.main_Category = #{mainCategory}
+			</if>
+			<if test="orderList != null">
+			order by ${orderList},journal_id
+			</if>
+			<if test="orderList == null">
+			order by journal_date desc, journal_id
+			</if>
+	</select>
+	
+</mapper>

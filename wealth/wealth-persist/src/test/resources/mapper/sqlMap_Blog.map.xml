@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.solt.wealth.model.Blog">
+	<resultMap type="Blog" id="blogMap">
+		<id property="blogId" column="blog_Id" />
+		<result property="title" column="title"/>
+		<result property="content" column="content" jdbcType="CLOB"/>
+	</resultMap>
+	
+	<select id="findByKey" parameterType="Blog" resultMap="blogMap">
+		select * from blog where blog_Id = #{blogId}
+	</select>
+	
+	<select id="findList" parameterType="Blog" resultMap="blogMap">
+		select * from blog 
+			where 1=1
+			<if test="title != null and title !=''">
+			AND title like '%${title}%'
+			</if>
+			<if test="content != null and content !=''">
+			AND content = like '%${content}%'
+			</if>
+		 order by blog_Id
+	</select>
+	
+	<select id="countList">
+		select count(blog_id) from blog where 1=1
+		<if test="title != null and title !=''">
+		AND title like '%${title}%'
+		</if>
+		<if test="content != null and content !=''">
+		AND content = like '%${content}%'
+		</if>
+	</select>
+	
+	<insert id="insert" parameterType="Blog">
+		insert blog(blog_Id,title,content
+		)values(#{blogId},#{title},#{content}
+		)
+	</insert>
+	
+	<update id="update" parameterType="Blog">
+		update blog set title = #{title}
+		<if test="content != null and content !=''">
+			,content = #{content} 
+		</if>
+		where blog_Id = #{blogId}
+	</update>
+	
+	<delete id="delete" parameterType="Blog">
+		delete from blog where blog_Id = #{blogId}
+	</delete>
+</mapper>
